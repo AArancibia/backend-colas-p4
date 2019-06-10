@@ -6,7 +6,7 @@ export const formatFechaCorta = ( fecha?: any ) => {
 };
 
 export const formatFechaLarga = ( fecha?: any ) => {
-  const fechaFormateada =  moment( fecha ? fecha : new Date() ).format( 'YYYY-MM-DD HH:mm:SS');
+  const fechaFormateada =  moment( fecha ? fecha : new Date() ).format( 'YYYY-MM-DD HH:mm:ss:SSS');
   return fechaFormateada;
 };
 

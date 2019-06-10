@@ -45,11 +45,10 @@ export class TicketService {
     nuevoTicket.correlativo = correlativo;
     nuevoTicket.codigo = `${ preferencial ? 'P' : '' }${ abrTicket }-${ correlativo }`;
     await this.ticketRepository.save( nuevoTicket );
-    this.logger.log( formatFechaLarga() );
     await this.detEstadoTicketRepository.update({
       tbTicketId:  nuevoTicket.id,
       tbEstadoticketId: 1,
-    }, { fecha: formatFechaLarga() });
+    }, { fecha: new Date() });
     this.wsTicket.ws.emit( '[TICKET] Nuevo', nuevoTicket );
     return nuevoTicket;
   }
@@ -60,7 +59,7 @@ export class TicketService {
   ) {
     const ticket = await this.ticketRepository.findOne( {
       where: { id: idticket },
-      relations: [ 'estados' ],
+      relations: [ 'estados', 'administrado' ],
     });
     if ( !ticket ) throw new HttpException( `No existe el ticket con el id: ${ idticket }`, HttpStatus.NOT_FOUND );
     /*const nuevoEstado = await this.estadoRepository.findOne({ where: { id: idestado }});
@@ -77,6 +76,7 @@ export class TicketService {
       })
       .returning(['*'])
       .execute();
+    this.wsTicket.ws.emit( '[TICKET] NUEVO ESTADO' );
     return guardarDetEstadoTicket;
   }
 
@@ -86,7 +86,7 @@ export class TicketService {
   ) {
     const ticket = await this.ticketRepository.findOne( {
       where: { id: idticket },
-      relations: [ 'estados' ],
+      relations: [ 'estados', 'administrado' ],
     });
     if ( !ticket ) throw new HttpException( `No existe el ticket con el id: ${ idticket }`, HttpStatus.NOT_FOUND );
 
@@ -100,6 +100,11 @@ export class TicketService {
       idventanilla,
     });
     await this.ticketRepository.save( actualizarTicket );
+    await this.detEstadoTicketRepository.update({
+      tbTicketId:  ticket.id,
+      tbEstadoticketId: 2,
+    }, { fecha: new Date() });
+    this.wsTicket.ws.emit( 'ventanillaAsignadaAlTicket', actualizarTicket);
     return actualizarTicket;
   }
 

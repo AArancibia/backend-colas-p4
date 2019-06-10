@@ -1,7 +1,7 @@
 import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { Ticket } from '../ticket.entity';
 import { Estado } from '../estadoticket/estadoticket.entity';
-import { formatFechaLarga } from '../../../shared/utils';
+import { formatFechaCorta, formatFechaLarga } from '../../../shared/utils';
 
 @Entity( 'tb_ticket_estados_tb_estadoticket' )
 export class Detestadoticket {
@@ -27,8 +27,13 @@ export class Detestadoticket {
 
   @Column('timestamp', {
     name: 'fecha',
+    //default: new Date(),
     nullable: true,
   })
   fecha: Date | string;
 
+  /*@BeforeInsert()
+  asignarFecha() {
+    this.fecha = formatFechaLarga();
+  }*/
 }
