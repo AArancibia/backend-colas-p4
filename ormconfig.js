@@ -10,7 +10,13 @@ module.exports = {
   "username": data.TYPEORM_USERNAME,
   "password": data.TYPEORM_PASSWORD,
   "database": data.TYPEORM_DATABASE,
-  "synchronize": Boolean( data.TYPEORM_SYNCHRONIZE ),
+  "synchronize": true,//Boolean( data.TYPEORM_SYNCHRONIZE ),
   "logging": Boolean( data.TYPEORM_LOGGING ),
   "entities": data.TYPEORM_ENTITIES.split( "," ),
+  /*"migrationsRun": true,
+  "migrations": ["./src/migrations/!**!/!*.ts"],
+  "cli": {
+    "entitiesDir": "./src/!**!/!*.entity.ts",
+    "migrationsDir": "./src/migrations",
+  },*/
 };

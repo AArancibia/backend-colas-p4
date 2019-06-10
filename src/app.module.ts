@@ -8,6 +8,7 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
 import { AdministradoModule } from './modules/administrado/administrado.module';
 import { SistradocModule } from './modules/sistradoc/sistradoc.module';
 import { ContribuyenteModule } from './modules/rentas/contribuyente/contribuyente.module';
+import { SocketGateway } from './gateways/socket.gateway';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ContribuyenteModule } from './modules/rentas/contribuyente/contribuyent
     AdministradoModule,
     SistradocModule,
     ContribuyenteModule,
+    SocketGateway,
   ],
   controllers: [AppController],
   providers: [AppService],

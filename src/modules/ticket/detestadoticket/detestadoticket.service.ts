@@ -13,25 +13,17 @@ export class DetestadoticketService {
   ) {}
 
   async getDetEstadoTicket() {
-    /*const detTickets = await this.detestadoRepository.find({
-      relations: ['ticket', 'estado'],
-      where: {
-        fecha: {
-
-        }
-      },
-    });*/
     const qb = await this.detestadoRepository.createQueryBuilder("t1");
     const detTickets = qb
       .innerJoinAndSelect( 't1.ticket' , 'tb_ticket')
       .where(
         sq => {
           const subQuery = qb.subQuery()
-            .select("max( fecha )")
-            .from( Detestadoticket, "t2" )
-            .where( "t1.tbTicketId = t2.tbTicketId" )
+            .select('max( fecha )')
+            .from( Detestadoticket, 't2' )
+            .where( 't1.tbTicketId = t2.tbTicketId' )
             .getQuery();
-          return "t1.fecha = " + subQuery;
+          return 't1.fecha = ' + subQuery;
         },
       )
       .getMany();

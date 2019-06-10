@@ -1,10 +1,10 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { Usuario } from '../usuario/usuario.entity';
 import { Tipoticket } from './tipoticket/tipoticket.entity';
 import { Administrado } from '../administrado/administrado.entity';
 import { Estado } from './estadoticket/estadoticket.entity';
-import { formatFechaCorta } from '../../shared/utils';
+import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
 //import { TicketEstado } from './detestadoticket/detestadoticket.entity';
 
 @Entity( 'tb_ticket' )
@@ -18,13 +18,11 @@ export class Ticket {
   })
   idtematica: number;
 
-  @Column('date', {
-    default: new Date(),
-  })
+  @Column('timestamp', { nullable: false })
   fecha: Date | string;
 
   @Column('varchar', {
-    nullable: false
+    nullable: false,
   })
   codigo: string;
 
@@ -43,7 +41,7 @@ export class Ticket {
   })
   fechacorta: Date | string;
 
-  @ManyToMany( type => Estado, { eager: true, cascade: true } )
+  @ManyToMany( type => Estado, { cascade: true } )
   @JoinTable()
   estados: Estado[];
 
@@ -51,7 +49,9 @@ export class Ticket {
   @JoinColumn({ name: 'idventanilla' })
   ventanilla: Ventanilla;
 
-  @Column()
+  @Column('integer', {
+    nullable: true,
+  })
   idventanilla: number;
 
   @ManyToOne( type => Tipoticket, tipoTicket => tipoTicket.idtipoticket )
@@ -74,5 +74,10 @@ export class Ticket {
 
   @RelationId( ( tickets: Ticket ) => tickets.estados )
   estadosIds: number[];
+
+  @BeforeInsert()
+  asignarFecha() {
+    this.fecha = new Date();
+  }
 
 }

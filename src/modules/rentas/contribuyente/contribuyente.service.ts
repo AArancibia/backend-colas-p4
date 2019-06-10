@@ -22,6 +22,7 @@ export class ContribuyenteService {
           },
         }, (err, res, body) => {
         if (err) { reject('Error en el DNI InterOperabilidad'); }
+        if ( !res ) reject( 'No hay respuesta' );
         const { statusCode } = res;
         resolve({
           statusCode,
