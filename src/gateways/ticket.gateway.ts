@@ -6,7 +6,7 @@ import {
   WebSocketServer, WsResponse,
 } from '@nestjs/websockets';
 import { Logger, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { formatFechaCorta, formatFechaLarga } from '../shared/utils';
 import { Ticket } from '../modules/ticket/ticket.entity';
@@ -24,33 +24,58 @@ export class TicketGateway {
     @InjectRepository( Detestadoticket ) private detestadoRepository: Repository< Detestadoticket >,
   ) {}
 
+  private toReponseObject( ticket: Ticket ) {
+    for ( let i = 0; i <= ticket.estadosIds.length; i++ ) {
+      const estado = ticket.estadosIds[ i ];
+      this.logger.log( estado );
+      if ( estado == 4 ) {
+        this.logger.log( 'hay 4');
+        return;
+      }
+    }
+    return ticket;
+  }
+
   @SubscribeMessage( '[TICKET] Lista' )
   async listarTickets( client, data ): Promise< any > { //WsResponse< TicketRO >
     const tickets = await this.ticketRepository.find({
-      relations: [ 'estados', 'administrado' ],
+      relations: [ 'estados', 'administrado', 'detEstados' ],
       where: {
         fechacorta: formatFechaCorta(),
       },
+      order: { fecha: 'ASC' },
     });
-    return tickets;
+    const ticketsRO: Ticket[] = [];
+    tickets.map(
+      ticket => {
+        ticket.detEstados.sort( ( a, b ) => new Date( b.fecha ).getTime() - new Date( a.fecha).getTime() );
+        const ultimoEstado = ticket.detEstados[ 0 ].estadoticketId;
+        if ( ultimoEstado === 4 || ultimoEstado === 6 ) {
+          return;
+        }
+        ticketsRO.push( ticket );
+      },
+    );
+    return ticketsRO;
   }
 
   @SubscribeMessage( '[TICKET] DETESTADO' )
   async getDetEstadoTicket() {
-    const qb = await this.detestadoRepository.createQueryBuilder("t1");
+    const qb = await this.detestadoRepository.createQueryBuilder('t1');
     const detTickets = qb
-      .innerJoinAndSelect( 't1.ticket' , 'tb_ticket')
+      .innerJoinAndSelect( 't1.ticket', 'ticket' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
       .where(
         sq => {
           const subQuery = qb.subQuery()
             .select('max( fecha )')
             .from( Detestadoticket, 't2' )
-            .where( 't1.tbTicketId = t2.tbTicketId' )
+            .where( 't1.ticketId = t2.ticketId' )
             .getQuery();
           return 't1.fecha = ' + subQuery;
         },
       )
       .getMany();
+    this.logger.log( detTickets );
     return detTickets;
   }
 }

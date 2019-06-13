@@ -5,9 +5,9 @@ import { Tipoticket } from './tipoticket/tipoticket.entity';
 import { Administrado } from '../administrado/administrado.entity';
 import { Estado } from './estadoticket/estadoticket.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
-//import { TicketEstado } from './detestadoticket/detestadoticket.entity';
+import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
 
-@Entity( 'tb_ticket' )
+@Entity( 'ticket' )
 export class Ticket {
   
   @PrimaryGeneratedColumn()
@@ -17,6 +17,11 @@ export class Ticket {
     nullable: false,
   })
   idtematica: number;
+
+  @Column('integer', {
+    nullable: true,
+  })
+  idtramite: number;
 
   @Column('timestamp', { nullable: false })
   fecha: Date | string;
@@ -36,14 +41,16 @@ export class Ticket {
   })
   urgente: boolean;
 
-  @Column('date', {
-    default: formatFechaCorta(),
-  })
+  @Column( 'date')
   fechacorta: Date | string;
 
   @ManyToMany( type => Estado, { cascade: true } )
   @JoinTable()
   estados: Estado[];
+
+  /* PARA PODER OBTERNER LOS DETESTADOS DEL TICKET */
+  @OneToMany( type => Detestadoticket, det => det.ticket, { cascade: true  } )
+  detEstados: Detestadoticket[];
 
   @ManyToOne( type => Ventanilla, ventanilla => ventanilla.id )
   @JoinColumn({ name: 'idventanilla' })
@@ -78,6 +85,11 @@ export class Ticket {
   @BeforeInsert()
   asignarFecha() {
     this.fecha = new Date();
+  }
+
+  @BeforeInsert()
+  asignarFechaCorta() {
+    this.fechacorta = formatFechaCorta();
   }
 
 }

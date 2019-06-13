@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Ventanilla } from '../ventanilla.entity';
 import { Estado } from '../../ticket/estadoticket/estadoticket.entity';
 import { Estadoventanilla } from '../estadoventanilla/estadoventanilla.entity';
@@ -20,9 +20,6 @@ export class Detestadoventanilla {
   @Column('integer', { primary: true })
   tbEstadoventanillaId: number;
 
-  @Column('date', {
-    name: 'fecha',
-    default: new Date(),
-  })
+  @CreateDateColumn()
   fecha: Date | string;
 }

@@ -4,7 +4,7 @@ import * as request from 'request';
 @Injectable()
 export class ContribuyenteService {
   urlReniec: string = 'http://192.168.10.6:5050/platpide/buscardni';
-  urlRentas: string = 'http://192.168.10.207:3033/api/rentas/';
+  urlRentas: string = 'http://192.168.10.208:3032/api/rentas/';//207:3033
   private logger = new Logger( 'ContribuyenteService' );
   constructor(
 

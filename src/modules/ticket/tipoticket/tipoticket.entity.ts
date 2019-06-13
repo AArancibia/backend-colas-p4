@@ -21,8 +21,7 @@ export class Tipoticket {
   })
   abr: string;
 
-  @OneToMany( type => Ticket, ticket => ticket.idticket )
+  @OneToMany( type => Ticket, ticket => ticket.id )
   ticket: Ticket;
-
 
 }

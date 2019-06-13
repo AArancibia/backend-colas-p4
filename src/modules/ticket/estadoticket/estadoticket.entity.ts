@@ -1,8 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Ticket } from '../ticket.entity';
-//import { TicketEstado } from '../detestadoticket/detestadoticket.entity';
 
-@Entity( 'tb_estadoticket' )
+@Entity( 'estadoticket' )
 export class Estado {
   @PrimaryGeneratedColumn()
   id: number;
