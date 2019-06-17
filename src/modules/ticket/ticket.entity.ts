@@ -14,7 +14,7 @@ export class Ticket {
   id: number;
 
   @Column('integer', {
-    nullable: false,
+    nullable: true,
   })
   idtematica: number;
 
@@ -30,6 +30,12 @@ export class Ticket {
     nullable: false,
   })
   codigo: string;
+
+  @Column('boolean', {
+    nullable: true,
+    default: false,
+  })
+  preferencial: boolean;
 
   @Column( 'bigint', {
     nullable: false,

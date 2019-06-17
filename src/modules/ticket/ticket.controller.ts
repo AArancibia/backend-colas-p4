@@ -47,4 +47,12 @@ export class TicketController {
     return this.ticketService.derivarOtraVentanilla( idticket, idventanilla );
   }
 
+  @Put(':idticket/tematica/tramite')
+  guardarTramiteEnTicket(
+    @Param( 'idticket' ) idticket: number,
+    @Body() actualizarTematicaTramite: any,
+  ) {
+    return this.ticketService.actualizarTematicaOrTramite( idticket, actualizarTematicaTramite );
+  }
+
 }

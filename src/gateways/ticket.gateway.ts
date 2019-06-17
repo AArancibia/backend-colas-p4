@@ -11,6 +11,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { formatFechaCorta, formatFechaLarga } from '../shared/utils';
 import { Ticket } from '../modules/ticket/ticket.entity';
 import { Detestadoticket } from '../modules/ticket/detestadoticket/detestadoticket.entity';
+import * as momenttz from 'moment-timezone';
+import * as moment from 'moment';
 
 @WebSocketGateway( 8081, {
   namespace: 'ticket',
@@ -61,6 +63,7 @@ export class TicketGateway {
 
   @SubscribeMessage( '[TICKET] DETESTADO' )
   async getDetEstadoTicket() {
+    const fecha2 = moment( formatFechaCorta() ).add('days', 1).format('YYYY-MM-DD');
     const qb = await this.detestadoRepository.createQueryBuilder('t1');
     const detTickets = qb
       .innerJoinAndSelect( 't1.ticket', 'ticket' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
@@ -74,8 +77,14 @@ export class TicketGateway {
           return 't1.fecha = ' + subQuery;
         },
       )
+      .andWhere(
+        ' t1.fecha between :fec1 and :fec2 ',
+        {
+          fec1: `${ formatFechaCorta() } ` + '00:00:00',
+          fec2: `${ fecha2 } ` + '00:00:00',
+        },
+      )
       .getMany();
-    this.logger.log( detTickets );
     return detTickets;
   }
 }

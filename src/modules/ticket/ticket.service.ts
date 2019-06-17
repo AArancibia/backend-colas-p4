@@ -24,17 +24,16 @@ export class TicketService {
     private wsTicket: TicketGateway,
   ) {}
 
-  private toReponseObject( ticket: Ticket ) {
-
-    for ( let i = 0; i <= ticket.estadosIds.length; i++ ) {
-      const estado = ticket.estadosIds[ i ];
-      this.logger.log( estado );
-      if ( estado == 4 ) {
-        this.logger.log( 'hay 4');
-        return;
-      }
-    }
-    return ticket;
+  async actualizarTematicaOrTramite(
+    idticket: number,
+    ticket: any,
+  ) {
+    const ticketActualizado = await this.ticketRepository.update( idticket, {
+      idtematica: ticket ? ticket.idtematica : null,
+      idtramite: ticket ? ticket.idtramite : null,
+    });
+    this.logger.log( ticketActualizado );
+    return ticketActualizado ;
   }
 
   async getTickets() {
@@ -66,6 +65,7 @@ export class TicketService {
     const nuevoTicket: Ticket = await this.ticketRepository.create({
       ...ticket,
       administrado,
+      preferencial,
     });
     nuevoTicket.estados = [ estado ];
     const abrTicket = await this.obtenerTipoTicket( idtipoticket );
