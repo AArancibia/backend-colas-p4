@@ -11,6 +11,8 @@ import { Tipoticket } from './tipoticket/tipoticket.entity';
 import { Administrado } from '../administrado/administrado.entity';
 import { TicketGateway } from '../../gateways/ticket.gateway';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
+import { VentanillaService } from '../ventanilla/ventanilla.service';
+import { VentanillaModule } from '../ventanilla/ventanilla.module';
 
 @Module({
   imports: [
@@ -18,9 +20,11 @@ import { Ventanilla } from '../ventanilla/ventanilla.entity';
     TipoticketModule,
     EstadoticketModule,
     DetestadoticketModule,
+    VentanillaModule,
   ],
   controllers: [TicketController],
   providers: [
+    VentanillaService,
     TicketService,
     TicketGateway,
   ],

@@ -10,6 +10,7 @@ import { Administrado } from '../administrado/administrado.entity';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { TicketGateway } from '../../gateways/ticket.gateway';
 import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
+import { VentanillaService } from '../ventanilla/ventanilla.service';
 
 @Injectable()
 export class TicketService {
@@ -21,6 +22,7 @@ export class TicketService {
     @InjectRepository( Tipoticket ) private tipoTicketRepository: Repository< Tipoticket >,
     @InjectRepository( Administrado ) private administradoRepository: Repository< Administrado >,
     @InjectRepository( Ventanilla ) private ventanillaRepository: Repository< Ventanilla >,
+    private ventanillaService: VentanillaService,
     private wsTicket: TicketGateway,
   ) {}
 
@@ -96,13 +98,14 @@ export class TicketService {
       //relations: [ 'estados', 'administrado', 'detEstados' ],
     });
     if ( !ticket ) throw new HttpException( `No existe el ticket con el id: ${ idticket }`, HttpStatus.NOT_FOUND );
+    await this.ventanillaService.guardarNuevoEstado( ticket.idventanilla, idestado );
     const guardarDetEstadoTicket = await this.detEstadoTicketRepository.createQueryBuilder()
       .insert()
       .into( Detestadoticket )
       .values({
         estadoticketId: idestado,
         ticketId: idticket,
-        fecha: formatFechaLarga()
+        fecha: formatFechaLarga(),
       })
       .returning(['*'])
       .execute();
@@ -130,6 +133,9 @@ export class TicketService {
     if ( !ventanilla ) throw new HttpException( `No existe la ventanilla con el id: ${ idventanilla }`, HttpStatus.NOT_FOUND );
 
     const llamandoEstado = await this.estadoRepository.findOne({ where: { id: 2 }});
+
+    await this.ventanillaService.guardarNuevoEstado( idventanilla, 2 );
+
     ticket.estados = [ ...ticket.estados, llamandoEstado ];
     const actualizarTicket: Ticket = await this.ticketRepository.create({
       ...ticket,

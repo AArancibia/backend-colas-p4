@@ -8,6 +8,11 @@ export class VentanillaController {
     private ventanillaService: VentanillaService,
   ) {}
 
+  @Get()
+  obtenerVentanillas() {
+    return this.ventanillaService.obtenerVentanillas();
+  }
+
   @Post()
   guardarVentanilla(
     @Body() ventanilla: VentanillaDTO,

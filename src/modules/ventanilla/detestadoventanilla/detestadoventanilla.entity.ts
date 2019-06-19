@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Ventanilla } from '../ventanilla.entity';
 import { Estado } from '../../ticket/estadoticket/estadoticket.entity';
 import { Estadoventanilla } from '../estadoventanilla/estadoventanilla.entity';
+import { formatFechaLarga } from '../../../shared/utils';
 
 @Entity( { name: 'tb_ventanilla_estados_tb_estadoventanilla' } )
 export class Detestadoventanilla {
@@ -20,6 +21,19 @@ export class Detestadoventanilla {
   @Column('integer', { primary: true })
   tbEstadoventanillaId: number;
 
-  @CreateDateColumn()
+  @PrimaryGeneratedColumn( 'uuid', {
+    name: 'identificador',
+    comment: 'Campo que es 3ra llave primaria'
+  } )
+  identificador: string;
+
+  @Column('timestamp', {
+    nullable: true,
+  })
   fecha: Date | string;
+
+  @BeforeInsert()
+  asignarFecha() {
+    this.fecha = formatFechaLarga();
+  }
 }
