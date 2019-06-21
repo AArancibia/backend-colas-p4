@@ -178,8 +178,7 @@ export class TicketService {
       .into( Detestadoticket )
       .values([
         { tbTicketId: idticket, tbEstadoticketId: buscarEstados[ 0 ].id, fecha: new Date() },
-      ])
-      .returning( ['*'] )
+      ]).returning( ['*'] )
       .execute();*/
 
     await this.detEstadoTicketRepository.save(

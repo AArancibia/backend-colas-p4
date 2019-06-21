@@ -6,8 +6,7 @@ import { Estadoventanilla } from './estadoventanilla/estadoventanilla.entity';
 import { VentanillaDTO } from './ventanilla.dto';
 import { Detestadoventanilla } from './detestadoventanilla/detestadoventanilla.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
-import { Detestadoticket } from '../ticket/detestadoticket/detestadoticket.entity';
-import * as moment from 'moment';
+import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
 
 @Injectable()
 export class VentanillaService {
@@ -16,6 +15,7 @@ export class VentanillaService {
     @InjectRepository( Ventanilla ) private ventanillaRepository: Repository< Ventanilla >,
     @InjectRepository( Estadoventanilla ) private estadoVentanillaRepository: Repository< Estadoventanilla >,
     @InjectRepository( Detestadoventanilla ) private detEstadoVentanillaRepository: Repository< Detestadoventanilla >,
+    private ventanillaGateway: VentanillaGateway,
   ) {}
 
   async obtenerVentanillas() {
@@ -63,34 +63,16 @@ export class VentanillaService {
       .execute();
 
     const detEstadoVentanilla = await this.ultimoEstadoVentanilla();
+    this.ventanillaGateway.wsVentanilla.emit( '[VENTANILLA] ULTIMOESTADO', detEstadoVentanilla);
 
     return detEstadoVentanilla;
   }
 
-  async ultimoEstadoVentanilla() {
-    const fecha2 = moment( formatFechaCorta() ).add('days', 1).format('YYYY-MM-DD');
-    const qb = await this.detEstadoVentanillaRepository.createQueryBuilder('t1');
-    const detVentanillas = qb
-      .innerJoinAndSelect( 't1.ventanilla', 'tb_ventanilla' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
-      .where(
-        sq => {
-          const subQuery = qb.subQuery()
-            .select( 'max( fecha )')
-            .from( Detestadoventanilla, 't2' )
-            .where( 't1.tbVentanillaId = t2.tbVentanillaId' )
-            .getQuery();
-          return 't1.fecha = ' + subQuery;
-        },
-      )
-      .andWhere(
-        ' t1.fecha between :fec1 and :fec2 ',
-        {
-          fec1: `${ formatFechaCorta() } ` + '00:00:00',
-          fec2: `${ fecha2 } ` + '00:00:00',
-        },
-      )
-      .getMany();
-    return detVentanillas;
+  async ultimoEstadoVentanilla(
+    idventanilla?: number,
+  ) {
+    const ultimoEstado = await this.ventanillaGateway.ultimoEstadoVentanilla( idventanilla );
+    return ultimoEstado;
   }
 
 }

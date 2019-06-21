@@ -10,7 +10,7 @@ module.exports = {
   "username": data.TYPEORM_USERNAME,
   "password": data.TYPEORM_PASSWORD,
   "database": data.TYPEORM_DATABASE,
-  "synchronize": true,//Boolean( data.TYPEORM_SYNCHRONIZE ),
+  "synchronize": false,//Boolean( data.TYPEORM_SYNCHRONIZE ),
   "logging": Boolean( data.TYPEORM_LOGGING ),
   "entities": data.TYPEORM_ENTITIES.split( "," ),
   /*"migrationsRun": true,

@@ -13,6 +13,7 @@ import { TicketGateway } from '../../gateways/ticket.gateway';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { VentanillaService } from '../ventanilla/ventanilla.service';
 import { VentanillaModule } from '../ventanilla/ventanilla.module';
+import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { VentanillaModule } from '../ventanilla/ventanilla.module';
     VentanillaService,
     TicketService,
     TicketGateway,
+    VentanillaGateway,
   ],
 })
 export class TicketModule {}

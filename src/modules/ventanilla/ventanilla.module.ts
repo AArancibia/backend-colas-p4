@@ -7,14 +7,18 @@ import { DetestadoventanillaModule } from './detestadoventanilla/detestadoventan
 import { Ventanilla } from './ventanilla.entity';
 import { Estadoventanilla } from './estadoventanilla/estadoventanilla.entity';
 import { Detestadoventanilla } from './detestadoventanilla/detestadoventanilla.entity';
+import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
 
 @Module({
   controllers: [VentanillaController],
-  providers: [VentanillaService],
   imports: [
     TypeOrmModule.forFeature( [ Ventanilla, Estadoventanilla, Detestadoventanilla ] ),
     EstadoventanillaModule,
     DetestadoventanillaModule,
+  ],
+  providers: [
+    VentanillaService,
+    VentanillaGateway,
   ],
 })
 export class VentanillaModule {}

@@ -9,6 +9,7 @@ import { AdministradoModule } from './modules/administrado/administrado.module';
 import { SistradocModule } from './modules/sistradoc/sistradoc.module';
 import { ContribuyenteModule } from './modules/rentas/contribuyente/contribuyente.module';
 import { SocketGateway } from './gateways/socket.gateway';
+import { VentanillaGateway } from './gateways/ventanilla.gateway';
 
 @Module({
   imports: [
