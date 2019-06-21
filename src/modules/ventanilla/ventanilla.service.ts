@@ -65,7 +65,7 @@ export class VentanillaService {
     const detEstadoVentanilla = await this.ultimoEstadoVentanilla();
     this.ventanillaGateway.wsVentanilla.emit( '[VENTANILLA] ULTIMOESTADO', detEstadoVentanilla);
 
-    return detEstadoVentanilla;
+    return guardarDetEstadoVentanilla.identifiers[ 0 ];
   }
 
   async ultimoEstadoVentanilla(

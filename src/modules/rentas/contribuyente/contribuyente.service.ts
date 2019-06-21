@@ -22,7 +22,9 @@ export class ContribuyenteService {
           },
         }, (err, res, body) => {
         if (err) { reject('Error en el DNI InterOperabilidad'); }
-        if ( !res ) reject( 'No hay respuesta' );
+        if ( !res ) reject( () =>  {
+          throw new HttpException('ERROR CONSULTA A RENIEC', HttpStatus.INTERNAL_SERVER_ERROR );
+        });
         const { statusCode } = res;
         resolve({
           statusCode,
