@@ -34,7 +34,8 @@ export class TicketService {
       idtematica: ticket ? ticket.idtematica : null,
       idtramite: ticket ? ticket.idtramite : null,
     });
-    this.logger.log( ticketActualizado );
+    const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
+    this.wsTicket.ws.emit( '[TICKET] DETESTADO', ticketAEmitir );
     return ticketActualizado ;
   }
 
@@ -98,7 +99,8 @@ export class TicketService {
       //relations: [ 'estados', 'administrado', 'detEstados' ],
     });
     if ( !ticket ) throw new HttpException( `No existe el ticket con el id: ${ idticket }`, HttpStatus.NOT_FOUND );
-    await this.ventanillaService.guardarNuevoEstado( ticket.idventanilla, idestado );
+    const idestadoVentanilla = ( idestado === 4 ) || ( idestado === 6 ) ? 3 : idestado;
+    await this.ventanillaService.guardarNuevoEstado( ticket.idventanilla, idestadoVentanilla );
     const guardarDetEstadoTicket = await this.detEstadoTicketRepository.createQueryBuilder()
       .insert()
       .into( Detestadoticket )
@@ -204,6 +206,8 @@ export class TicketService {
       ticketaEmitir,
       ventanillaAntigua,
     });
+    const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
+    this.wsTicket.ws.emit( '[TICKET] DETESTADO', ticketAEmitir );
     return ticketaEmitir;
   }
 

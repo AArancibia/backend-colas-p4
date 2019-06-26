@@ -5,6 +5,7 @@ import { Detestadoventanilla } from '../modules/ventanilla/detestadoventanilla/d
 import { Ticket } from '../modules/ticket/ticket.entity';
 import { Repository } from 'typeorm';
 import * as moment from 'moment';
+import { Ventanilla } from '../modules/ventanilla/ventanilla.entity';
 
 @WebSocketGateway( 8081, {
   namespace: 'ventanilla',
@@ -15,12 +16,21 @@ export class VentanillaGateway {
 
   constructor(
     @InjectRepository( Detestadoventanilla ) private detEstadoVentanillaRepository: Repository< Detestadoventanilla >,
+    @InjectRepository( Ventanilla) private ventanillaRepository: Repository< Ventanilla >,
   ) {}
 
+  @SubscribeMessage( '[VENTANILLA] LISTA' )
+  async obtenerVentanillas() {
+    const ventanillas = await this.ventanillaRepository.find(
+      {
+        relations: [ 'usuario' ],
+      },
+    );
+    return ventanillas;
+  }
+
   @SubscribeMessage( '[VENTANILLA] ULTIMOESTADO' )
-  async ultimoEstadoVentanilla(
-    idventanilla?: number,
-  ) {
+  async ultimoEstadoVentanilla() {
     const fecha2 = moment( formatFechaCorta() ).add('days', 1).format('YYYY-MM-DD');
     const qb = await this.detEstadoVentanillaRepository.createQueryBuilder('t1');
     const detVentanillas = qb
@@ -42,12 +52,12 @@ export class VentanillaGateway {
           fec2: `${ fecha2 } ` + '00:00:00',
         },
       )
-      .andWhere(
+      /*.andWhere(
         't1.tbVentanillaId = :idventanilla',
         {
           idventanilla,
         },
-      )
+      )*/
       .getMany();
     return detVentanillas;
   }

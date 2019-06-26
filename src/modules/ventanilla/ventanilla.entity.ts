@@ -14,6 +14,12 @@ export class Ventanilla {
   })
   codigoVentanilla: string;
 
+  @Column('varchar', {
+    nullable: true,
+    unique: true,
+  })
+  tipoatencion: string;
+
   @Column( 'varchar', {
     name: 'ubicacion',
     comment: 'Ubicacion de la ventanilla',

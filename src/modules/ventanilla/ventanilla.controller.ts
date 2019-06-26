@@ -13,7 +13,14 @@ export class VentanillaController {
     return this.ventanillaService.obtenerVentanillas();
   }
 
-  @Get(':id/ultimoestado')
+  @Get( 'usuario/:idusuario')
+  obtenerVentanillaporIdPersonal(
+    @Param( 'idusuario') idusuario: number,
+  ) {
+    return this.ventanillaService.obtenerVentanillaporIdUsuario( idusuario );
+  }
+
+  @Get(':id/ultimoestado')//:id/
   ventanillaUltimoEstado(
     @Param( 'id' ) id: number,
   ) {

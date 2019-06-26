@@ -10,7 +10,7 @@ import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
 
 @Injectable()
 export class VentanillaService {
-  private logger = new Logger( 'Ventanilla' );
+  private logger = new Logger( 'VentanillaService' );
   constructor(
     @InjectRepository( Ventanilla ) private ventanillaRepository: Repository< Ventanilla >,
     @InjectRepository( Estadoventanilla ) private estadoVentanillaRepository: Repository< Estadoventanilla >,
@@ -19,7 +19,18 @@ export class VentanillaService {
   ) {}
 
   async obtenerVentanillas() {
-    const ventanillas = await this.ventanillaRepository.find();
+    const ventanillas = await this.ventanillaGateway.obtenerVentanillas();
+    return ventanillas;
+  }
+
+  async obtenerVentanillaporIdUsuario(
+    idusuario: number,
+  ) {
+    const ventanillas = await this.ventanillaRepository.findOne({
+      where: {
+        idusuario,
+      },
+    });
     return ventanillas;
   }
 
@@ -62,17 +73,23 @@ export class VentanillaService {
       .returning(['*'])
       .execute();
 
-    const detEstadoVentanilla = await this.ultimoEstadoVentanilla();
+    const detEstadoVentanilla = await this.ventanillaGateway.ultimoEstadoVentanilla( );
     this.ventanillaGateway.wsVentanilla.emit( '[VENTANILLA] ULTIMOESTADO', detEstadoVentanilla);
 
     return guardarDetEstadoVentanilla.identifiers[ 0 ];
   }
 
   async ultimoEstadoVentanilla(
-    idventanilla?: number,
+    idventanilla?,
   ) {
-    const ultimoEstado = await this.ventanillaGateway.ultimoEstadoVentanilla( idventanilla );
-    return ultimoEstado;
+    let ultimoEstado: any[] = await this.ventanillaGateway.ultimoEstadoVentanilla( );
+    for (let i = 0; i < ultimoEstado.length; i++ ) {
+      this.logger.log( ultimoEstado[ i ].tbVentanillaId + '  ' + idventanilla );
+      if ( ultimoEstado[ i ].tbVentanillaId == idventanilla ) {
+        return ultimoEstado[ i ];
+      }
+    }
+    return null;
   }
 
 }
