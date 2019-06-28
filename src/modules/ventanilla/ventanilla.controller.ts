@@ -6,7 +6,8 @@ import { VentanillaDTO } from './ventanilla.dto';
 export class VentanillaController {
   constructor(
     private ventanillaService: VentanillaService,
-  ) {}
+  ) {
+  }
 
   @Get()
   obtenerVentanillas() {

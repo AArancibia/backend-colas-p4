@@ -35,6 +35,7 @@ export class VentanillaGateway {
     const qb = await this.detEstadoVentanillaRepository.createQueryBuilder('t1');
     const detVentanillas = qb
       .innerJoinAndSelect( 't1.ventanilla', 'tb_ventanilla' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
+      .innerJoinAndSelect( 'ticket', 'ticket', 'ticket.idventanilla = tb_ventanilla.id')
       .where(
         sq => {
           const subQuery = qb.subQuery()
@@ -52,13 +53,8 @@ export class VentanillaGateway {
           fec2: `${ fecha2 } ` + '00:00:00',
         },
       )
-      /*.andWhere(
-        't1.tbVentanillaId = :idventanilla',
-        {
-          idventanilla,
-        },
-      )*/
       .getMany();
     return detVentanillas;
   }
+
 }

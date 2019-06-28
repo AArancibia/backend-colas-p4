@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Ventanilla } from '../ventanilla.entity';
 import { Estado } from '../../ticket/estadoticket/estadoticket.entity';
 import { Estadoventanilla } from '../estadoventanilla/estadoventanilla.entity';
