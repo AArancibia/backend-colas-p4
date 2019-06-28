@@ -79,11 +79,6 @@ export class VentanillaService {
     return guardarDetEstadoVentanilla.identifiers[ 0 ];
   }
 
-  async ultimoPrueba() {
-    const detEstadoVentanilla = await this.ventanillaGateway.ultimoPrueba( );
-    return detEstadoVentanilla;
-  }
-
   async ultimoEstadoVentanilla(
     idventanilla?,
   ) {

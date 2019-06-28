@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Usuario } from '../usuario/usuario.entity';
 import { Estadoventanilla } from './estadoventanilla/estadoventanilla.entity';
 import { Ticket } from '../ticket/ticket.entity';
@@ -27,6 +27,12 @@ export class Ventanilla {
     nullable: true,
   })
   ubicacion: string;
+
+  @OneToMany( type => Ticket, ticket => ticket.ventanilla, { eager: true } )/*, { eager: true } */
+  tickets: Ticket;
+
+  /*@RelationId( ( ventanilla: Ventanilla ) => ventanilla.tickets )
+  estadosTicket: number[];*/
 
   @ManyToOne( type => Usuario, usuario => usuario.ventanillas )
   @JoinColumn({ name: 'idusuario'})

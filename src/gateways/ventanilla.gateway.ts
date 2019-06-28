@@ -47,6 +47,16 @@ export class VentanillaGateway {
         },
       )
       .andWhere(
+        sq => {
+          const subQuery = qb.subQuery()
+            .select( 'max( fecha )')
+            .from( Ticket, 't2' )
+            .where( 't1.tbVentanillaId = t2.idventanilla' )
+            .getQuery();
+          return 'ticket.fecha = ' + subQuery;
+        },
+      )
+      .andWhere(
         ' t1.fecha between :fec1 and :fec2 ',
         {
           fec1: `${ formatFechaCorta() } ` + '00:00:00',
