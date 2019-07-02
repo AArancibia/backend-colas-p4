@@ -39,13 +39,70 @@ export class VentanillaGateway {
 
     await queryRunner.connect();
 
-    const query = queryRunner.manager.createQueryBuilder()
-      .select()
+    const qb = await queryRunner.manager.createQueryBuilder();
+    const query: any = qb
+      .select( ['*'] )
       .from( Detestadoventanilla, 't1' )
-      .innerJoinAndSelect( 't1.ventanilla', 'tb_ventanilla' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
-      .innerJoinAndSelect( 'ticket', 'ticket', 'ticket.idventanilla = tb_ventanilla.id')
+      .innerJoin( 't1.ventanilla', 'ventanilla' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
+      .innerJoin( 'ticket', 'ticket', 'ticket.idventanilla = ventanilla.id')
+      .where(
+        sq => {
+          const subQuery = qb.subQuery()
+            .select( 'max( fecha )')
+            .from( Detestadoventanilla, 't2' )
+            .where( 't1.tbVentanillaId = t2.tbVentanillaId' )
+            .getQuery();
+          return 't1.fecha = ' + subQuery;
+        },
+      )
+      .andWhere(
+        sq => {
+          const subQuery = qb.subQuery()
+            .select( 'max( fecha )')
+            .from( Ticket, 't2' )
+            .where( 't1.tbVentanillaId = t2.idventanilla' )
+            .getQuery();
+          return 'ticket.fecha = ' + subQuery;
+        },
+      )
+      .andWhere(
+        ' t1.fecha between :fec1 and :fec2 ',
+        {
+          fec1: `${ formatFechaCorta() } ` + '00:00:00',
+          fec2: `${ fecha2 } ` + '00:00:00',
+        },
+      )
+      .execute();
+    const data: [] = await query;
+    const ultimoEstado = [];
+    data.map(
+      ( item, index, array ) => {
+        const {
+          id, idtematica, idtramite, codigo, correlativo, urgente, fechacorta,
+          idventanilla, idtipoticket, idadministrado, preferencial, tbVentanillaId,
+          tbEstadoventanillaId, identificador, fecha, codigo_ventanilla, ubicacion,
+          idusuario, tipoatencion,
+        } = item;
+        ultimoEstado.push(
+          {
+            ticket: {
+              id, idtematica, idtramite, codigo, correlativo, urgente, fechacorta,
+              idventanilla, idtipoticket, idadministrado,
+              preferencial,
+            },
+            ventanilla: {
+              codigo_ventanilla, ubicacion,
+              idusuario, tipoatencion,
+            },
+            detestado: {
+              tbVentanillaId, tbEstadoventanillaId, identificador, fecha,
+            },
+          },
+        );
+      },
+    );
 
-    const qb = await this.detEstadoVentanillaRepository.createQueryBuilder('t1');
+    /*const qb = await this.detEstadoVentanillaRepository.createQueryBuilder('t1');
     const detVentanillas = await qb
       .innerJoinAndSelect( 't1.ventanilla', 'tb_ventanilla' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
       .innerJoinAndSelect( 'ticket', 'ticket', 'ticket.idventanilla = tb_ventanilla.id')
@@ -76,9 +133,8 @@ export class VentanillaGateway {
           fec2: `${ fecha2 } ` + '00:00:00',
         },
       )
-      .getMany();
-    this.logger.log( detVentanillas );
-    return detVentanillas;
+      .getMany();*/
+    return ultimoEstado;
   }
 
 }
