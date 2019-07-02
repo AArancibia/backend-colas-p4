@@ -39,7 +39,7 @@ export class VentanillaGateway {
 
     await queryRunner.connect();
 
-    const qb = await queryRunner.manager.createQueryBuilder();
+    const qb = queryRunner.manager.createQueryBuilder();
     const query: any = qb
       .select( ['*'] )
       .from( Detestadoventanilla, 't1' )
@@ -83,8 +83,7 @@ export class VentanillaGateway {
           tbEstadoventanillaId, identificador, fecha, codigo_ventanilla, ubicacion,
           idusuario, tipoatencion,
         } = item;
-        ultimoEstado.push(
-          {
+        const elemento = {
             ticket: {
               id, idtematica, idtramite, codigo, correlativo, urgente, fechacorta,
               idventanilla, idtipoticket, idadministrado,
@@ -97,10 +96,14 @@ export class VentanillaGateway {
             detestado: {
               tbVentanillaId, tbEstadoventanillaId, identificador, fecha,
             },
-          },
+          };
+        ultimoEstado.push(
+          elemento,
         );
       },
     );
+
+    await queryRunner.manager.release();
 
     /*const qb = await this.detEstadoVentanillaRepository.createQueryBuilder('t1');
     const detVentanillas = await qb

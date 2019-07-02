@@ -73,8 +73,10 @@ export class VentanillaService {
       .returning(['*'])
       .execute();
 
+    this.logger.log( 'AQUI ANTES DE CONSUMIR ULTIMOESTADO' );
     const detEstadoVentanilla = await this.ventanillaGateway.ultimoEstadoVentanilla( );
     this.ventanillaGateway.wsVentanilla.emit( '[VENTANILLA] ULTIMOESTADO', detEstadoVentanilla);
+    this.logger.log( 'AQUI DESPUES DE CONSUMIR ULTIMOESTADO' );
 
     return guardarDetEstadoVentanilla.identifiers[ 0 ];
   }

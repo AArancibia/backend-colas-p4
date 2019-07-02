@@ -29,8 +29,6 @@ export class Detestadoventanilla {
   } )
   identificador: string;
 
-  ticket: Ticket;
-
   @Column('timestamp', {
     nullable: true,
   })

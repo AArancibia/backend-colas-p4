@@ -99,8 +99,15 @@ export class TicketService {
       //relations: [ 'estados', 'administrado', 'detEstados' ],
     });
     if ( !ticket ) throw new HttpException( `No existe el ticket con el id: ${ idticket }`, HttpStatus.NOT_FOUND );
-    const idestadoVentanilla = ( idestado == 4 ) || ( idestado == 6 ) ? 3 : idestado;
-    this.logger.log( idestadoVentanilla );
+    let idestadoVentanilla;
+    if ( idestado == 4  ||  idestado == 6 ) {
+      idestadoVentanilla = 3;
+    } else if ( idestado == 3 ) {
+      idestadoVentanilla = 2;
+    } else if ( idestado == 2 ) {
+      idestadoVentanilla = 1;
+    }
+    this.logger.log( `${ idestadoVentanilla } - ${ idestado }` );
     await this.ventanillaService.guardarNuevoEstado( ticket.idventanilla, idestadoVentanilla );
     const guardarDetEstadoTicket = await this.detEstadoTicketRepository.createQueryBuilder()
       .insert()
@@ -179,13 +186,7 @@ export class TicketService {
 
     const buscarEstados = await this.estadoRepository.find({ where: { id: In( [ 5, 1 ] ) }});
 
-    /*const insertarEstados = await this.detEstadoTicketRepository.createQueryBuilder()
-      .insert()
-      .into( Detestadoticket )
-      .values([
-        { tbTicketId: idticket, tbEstadoticketId: buscarEstados[ 0 ].id, fecha: new Date() },
-      ]).returning( ['*'] )
-      .execute();*/
+    await this.ventanillaService.guardarNuevoEstado( idventanilla, 3 );
 
     await this.detEstadoTicketRepository.save(
       {
