@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { formatFechaCorta } from '../shared/utils';
 import { Detestadoventanilla } from '../modules/ventanilla/detestadoventanilla/detestadoventanilla.entity';
 import { Ticket } from '../modules/ticket/ticket.entity';
-import { Repository } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 import * as moment from 'moment';
 import { Ventanilla } from '../modules/ventanilla/ventanilla.entity';
 import { Logger } from '@nestjs/common';
@@ -34,6 +34,17 @@ export class VentanillaGateway {
   @SubscribeMessage( '[VENTANILLA] ULTIMOESTADO' )
   async ultimoEstadoVentanilla() {
     const fecha2 = moment( formatFechaCorta() ).add('days', 1).format('YYYY-MM-DD');
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
+
+    await queryRunner.connect();
+
+    const query = queryRunner.manager.createQueryBuilder()
+      .select()
+      .from( Detestadoventanilla, 't1' )
+      .innerJoinAndSelect( 't1.ventanilla', 'tb_ventanilla' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
+      .innerJoinAndSelect( 'ticket', 'ticket', 'ticket.idventanilla = tb_ventanilla.id')
+
     const qb = await this.detEstadoVentanillaRepository.createQueryBuilder('t1');
     const detVentanillas = await qb
       .innerJoinAndSelect( 't1.ventanilla', 'tb_ventanilla' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
