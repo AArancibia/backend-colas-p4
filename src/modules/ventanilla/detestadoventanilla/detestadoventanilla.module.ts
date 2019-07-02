@@ -4,6 +4,7 @@ import { DetestadoventanillaService } from './detestadoventanilla.service';
 
 @Module({
   controllers: [DetestadoventanillaController],
-  providers: [DetestadoventanillaService]
+  providers: [DetestadoventanillaService ],
+  imports: [],
 })
 export class DetestadoventanillaModule {}

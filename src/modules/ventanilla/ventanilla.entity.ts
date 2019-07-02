@@ -28,7 +28,7 @@ export class Ventanilla {
   })
   ubicacion: string;
 
-  @OneToMany( type => Ticket, ticket => ticket.ventanilla, { eager: true } )/*, { eager: true } */
+  @OneToMany( type => Ticket, ticket => ticket.ventanilla )/*, { eager: true } */
   tickets: Ticket;
 
   /*@RelationId( ( ventanilla: Ventanilla ) => ventanilla.tickets )

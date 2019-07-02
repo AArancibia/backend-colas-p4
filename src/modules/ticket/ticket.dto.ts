@@ -39,6 +39,12 @@ export class TicketDto {
   preferencial: boolean;
 
   @ApiModelProperty()
+  @IsBoolean({
+    message: 'El valor tiene que ser verdadero o falso',
+  })
+  urgente: boolean;
+
+  @ApiModelProperty()
   idtramite?: number;
 
 }

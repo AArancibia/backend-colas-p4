@@ -22,10 +22,17 @@ export class VentanillaController {
   }
 
   @Get(':id/ultimoestado')//:id/
-  ventanillaUltimoEstado(
+  ventanillaUltimoEstadoPorId(
     @Param( 'id' ) id: number,
   ) {
     return this.ventanillaService.ultimoEstadoVentanilla( id );
+  }
+
+  @Get('ultimoestado')//:id/
+  ventanillaUltimoEstado(
+
+  ) {
+    return this.ventanillaService.ultimoEstadoVentanillas();
   }
 
   @Post(':id/estado/:idestado')

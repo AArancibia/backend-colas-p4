@@ -92,4 +92,9 @@ export class VentanillaService {
     return null;
   }
 
+  async ultimoEstadoVentanillas() {
+    let ultimoEstado: any[] = await this.ventanillaGateway.ultimoEstadoVentanilla( );
+    return ultimoEstado;
+  }
+
 }

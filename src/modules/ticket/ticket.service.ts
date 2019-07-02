@@ -62,7 +62,7 @@ export class TicketService {
   }
 
   async crearTicket( ticket: TicketDto ) {
-    const { idtipoticket, preferencial, idadministrado } = ticket;
+    const { idtipoticket, preferencial, idadministrado, urgente } = ticket;
     const estado = await this.estadoRepository.findOne( { where: { idestado: 1 } });
     const administrado = await this.administradoRepository.findOne({ where: { id: idadministrado }});
     const nuevoTicket: Ticket = await this.ticketRepository.create({
@@ -74,7 +74,7 @@ export class TicketService {
     const abrTicket = await this.obtenerTipoTicket( idtipoticket );
     const correlativo = await this.obtenerCorrelativo( idtipoticket, formatFechaCorta() );
     nuevoTicket.correlativo = correlativo;
-    nuevoTicket.codigo = `${ preferencial ? 'P' : '' }${ abrTicket }-${ correlativo }`;
+    nuevoTicket.codigo = `${ urgente ? 'U' : '' }${ preferencial ? 'P' : '' }${ abrTicket }-${ correlativo }`;
     await this.ticketRepository.save( nuevoTicket );
     await this.detEstadoTicketRepository.update({
       ticketId:  nuevoTicket.id,

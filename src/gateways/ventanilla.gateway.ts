@@ -6,11 +6,13 @@ import { Ticket } from '../modules/ticket/ticket.entity';
 import { Repository } from 'typeorm';
 import * as moment from 'moment';
 import { Ventanilla } from '../modules/ventanilla/ventanilla.entity';
+import { Logger } from '@nestjs/common';
 
 @WebSocketGateway( 8081, {
   namespace: 'ventanilla',
 })
 export class VentanillaGateway {
+  private logger = new Logger( 'VentanillaGateway');
   @WebSocketServer()
   wsVentanilla: any;
 
@@ -33,7 +35,7 @@ export class VentanillaGateway {
   async ultimoEstadoVentanilla() {
     const fecha2 = moment( formatFechaCorta() ).add('days', 1).format('YYYY-MM-DD');
     const qb = await this.detEstadoVentanillaRepository.createQueryBuilder('t1');
-    const detVentanillas = qb
+    const detVentanillas = await qb
       .innerJoinAndSelect( 't1.ventanilla', 'tb_ventanilla' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
       .innerJoinAndSelect( 'ticket', 'ticket', 'ticket.idventanilla = tb_ventanilla.id')
       .where(
@@ -64,6 +66,7 @@ export class VentanillaGateway {
         },
       )
       .getMany();
+    this.logger.log( detVentanillas );
     return detVentanillas;
   }
 
