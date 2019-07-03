@@ -35,6 +35,13 @@ export class VentanillaController {
     return this.ventanillaService.ultimoEstadoVentanillas();
   }
 
+  @Get('vista')//:id/
+  ventanillaUltimoEstadoView(
+
+  ) {
+    return this.ventanillaService.viewVentanillaEstado();
+  }
+
   @Post(':id/estado/:idestado')
   async guardarEstadoVentanilla(
     @Param('id') id: number,

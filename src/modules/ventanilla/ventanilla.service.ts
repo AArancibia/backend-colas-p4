@@ -7,6 +7,7 @@ import { VentanillaDTO } from './ventanilla.dto';
 import { Detestadoventanilla } from './detestadoventanilla/detestadoventanilla.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
 import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
+import { VentanillaEstadoEntity } from './ventanilla-estado.entity';
 
 @Injectable()
 export class VentanillaService {
@@ -15,8 +16,14 @@ export class VentanillaService {
     @InjectRepository( Ventanilla ) private ventanillaRepository: Repository< Ventanilla >,
     @InjectRepository( Estadoventanilla ) private estadoVentanillaRepository: Repository< Estadoventanilla >,
     @InjectRepository( Detestadoventanilla ) private detEstadoVentanillaRepository: Repository< Detestadoventanilla >,
+    @InjectRepository( VentanillaEstadoEntity ) private ventanillaEstadoViewRepository: Repository< VentanillaEstadoEntity >,
     private ventanillaGateway: VentanillaGateway,
   ) {}
+
+  async viewVentanillaEstado() {
+    const ultimoEstado = await this.ventanillaGateway.ultimoEstadoVentanilla();
+    return ultimoEstado;
+  }
 
   async obtenerVentanillas() {
     const ventanillas = await this.ventanillaGateway.obtenerVentanillas();
@@ -55,6 +62,7 @@ export class VentanillaService {
   async guardarNuevoEstado(
     idventanilla: number,
     idestado: number,
+    antiguo: boolean = false,
   ) {
     const estadoVentanilla = await this.estadoVentanillaRepository.findOne( { where: { id: idestado } });
     if ( !estadoVentanilla) throw new HttpException( `No existe la Estado Ventanilla con el id: ${ idestado }`, HttpStatus.NOT_FOUND );
@@ -73,11 +81,11 @@ export class VentanillaService {
       .returning(['*'])
       .execute();
 
-    this.logger.log( 'AQUI ANTES DE CONSUMIR ULTIMOESTADO' );
     const detEstadoVentanilla = await this.ventanillaGateway.ultimoEstadoVentanilla( );
-    this.ventanillaGateway.wsVentanilla.emit( '[VENTANILLA] ULTIMOESTADO', detEstadoVentanilla);
-    this.logger.log( 'AQUI DESPUES DE CONSUMIR ULTIMOESTADO' );
-
+    if ( !antiguo ) {
+      this.ventanillaGateway.wsVentanilla.emit( '[VENTANILLA] ULTIMOESTADO', detEstadoVentanilla);
+    }
+    this.logger.log( detEstadoVentanilla );
     return guardarDetEstadoVentanilla.identifiers[ 0 ];
   }
 

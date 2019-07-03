@@ -8,11 +8,12 @@ import { Ventanilla } from './ventanilla.entity';
 import { Estadoventanilla } from './estadoventanilla/estadoventanilla.entity';
 import { Detestadoventanilla } from './detestadoventanilla/detestadoventanilla.entity';
 import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
+import { VentanillaEstadoEntity } from './ventanilla-estado.entity';
 
 @Module({
   controllers: [VentanillaController],
   imports: [
-    TypeOrmModule.forFeature( [ Ventanilla, Estadoventanilla, Detestadoventanilla ] ),
+    TypeOrmModule.forFeature( [ Ventanilla, Estadoventanilla, Detestadoventanilla, VentanillaEstadoEntity ] ),
     EstadoventanillaModule,
     DetestadoventanillaModule,
   ],

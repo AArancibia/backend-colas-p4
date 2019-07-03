@@ -144,8 +144,6 @@ export class TicketService {
 
     const llamandoEstado = await this.estadoRepository.findOne({ where: { id: 2 }});
 
-    await this.ventanillaService.guardarNuevoEstado( idventanilla, 1 );
-
     ticket.estados = [ ...ticket.estados, llamandoEstado ];
 
     const actualizarTicket: Ticket = await this.ticketRepository.create({
@@ -166,6 +164,7 @@ export class TicketService {
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
     this.wsTicket.ws.emit( '[TICKET] DETESTADO', ticketAEmitir );
     this.wsTicket.ws.emit( 'ventanillaAsignadaAlTicket', ticketparaEmitir );
+    await this.ventanillaService.guardarNuevoEstado( idventanilla, 1 );
     return actualizarTicket;
   }
 
@@ -186,6 +185,7 @@ export class TicketService {
 
     const buscarEstados = await this.estadoRepository.find({ where: { id: In( [ 5, 1 ] ) }});
 
+    await this.ventanillaService.guardarNuevoEstado( ventanillaAntigua, 3, true );
     await this.ventanillaService.guardarNuevoEstado( idventanilla, 3 );
 
     await this.detEstadoTicketRepository.save(
