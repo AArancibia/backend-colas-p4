@@ -11,9 +11,9 @@ export class Ventanilla {
   @Column('varchar', {
     nullable: false,
     comment: 'Codigo de la ventanilla',
-    name: 'codigo_ventanilla',
+    name: 'codigoventanilla',
   })
-  codigoVentanilla: string;
+  codigoventanilla: string;
 
   @Column('varchar', {
     nullable: true,

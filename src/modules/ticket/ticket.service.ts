@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ticket } from './ticket.entity';
 import { Estado } from './estadoticket/estadoticket.entity';
-import { Between, In, Not, Repository } from 'typeorm';
+import { Between, In, Not, Repository, Transaction } from 'typeorm';
 import { TicketDto } from './ticket.dto';
 import { Tipoticket } from './tipoticket/tipoticket.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
@@ -214,6 +214,22 @@ export class TicketService {
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
     this.wsTicket.ws.emit( '[TICKET] DETESTADO', ticketAEmitir );
     return ticketaEmitir;
+  }
+
+  async ticketUrgente(
+    idticket: number,
+  ) {
+    const ticket = await this.ticketRepository.findOne({ where: { id: idticket }});
+    if ( !ticket ) throw new HttpException( `No se encuentra el ticket con id: ${ idticket }`, HttpStatus.NOT_FOUND );
+    const ticketActualizado = await this.ticketRepository.update(
+      { id: idticket },
+      {
+        urgente: true,
+      }
+    );
+    const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
+    this.wsTicket.ws.emit( '[TICKET] DETESTADO', ticketAEmitir );
+    return ticketActualizado;
   }
 
   async obtenerTipoTicket( idtipoticket: number ): Promise< string > {

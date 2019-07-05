@@ -7,7 +7,6 @@ import { VentanillaDTO } from './ventanilla.dto';
 import { Detestadoventanilla } from './detestadoventanilla/detestadoventanilla.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
 import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
-import { VentanillaEstadoEntity } from './ventanilla-estado.entity';
 
 @Injectable()
 export class VentanillaService {
@@ -16,7 +15,6 @@ export class VentanillaService {
     @InjectRepository( Ventanilla ) private ventanillaRepository: Repository< Ventanilla >,
     @InjectRepository( Estadoventanilla ) private estadoVentanillaRepository: Repository< Estadoventanilla >,
     @InjectRepository( Detestadoventanilla ) private detEstadoVentanillaRepository: Repository< Detestadoventanilla >,
-    @InjectRepository( VentanillaEstadoEntity ) private ventanillaEstadoViewRepository: Repository< VentanillaEstadoEntity >,
     private ventanillaGateway: VentanillaGateway,
   ) {}
 
@@ -28,6 +26,16 @@ export class VentanillaService {
   async obtenerVentanillas() {
     const ventanillas = await this.ventanillaGateway.obtenerVentanillas();
     return ventanillas;
+  }
+
+  async usuarioAVentanilla(
+    idventanilla: number,
+    idusuario: number,
+  ) {
+    const ventanillaActualizada = this.ventanillaGateway.usuarioAVentanilla( idventanilla, idusuario );
+    const ventanillas = await this.ventanillaGateway.obtenerVentanillas();
+    this.ventanillaGateway.wsVentanilla.emit( '[VENTANILLA] LISTA', ventanillas );
+    return ventanillaActualizada;
   }
 
   async obtenerVentanillaporIdUsuario(
@@ -42,7 +50,7 @@ export class VentanillaService {
   }
 
   async guardarVentanilla( ventanilla: VentanillaDTO ) {
-    const estadoVentanilla = await this.estadoVentanillaRepository.findOne( { where: { id: 1 } });
+    const estadoVentanilla = await this.estadoVentanillaRepository.findOne( { where: { id: 3 } });
     const nuevaVentanilla: Ventanilla = await this.ventanillaRepository.create( ventanilla );
 
     nuevaVentanilla.estados = [ estadoVentanilla ];
@@ -51,7 +59,7 @@ export class VentanillaService {
     await this.detEstadoVentanillaRepository.update(
       {
         tbVentanillaId: nuevaVentanilla.id,
-        tbEstadoventanillaId: 1,
+        tbEstadoventanillaId: 3,
       }, {
         fecha: formatFechaLarga(),
       },

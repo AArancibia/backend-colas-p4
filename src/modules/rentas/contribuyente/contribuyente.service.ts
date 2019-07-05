@@ -4,7 +4,7 @@ import * as request from 'request';
 @Injectable()
 export class ContribuyenteService {
   urlReniec: string = 'http://192.168.10.6:5050/platpide/buscardni';
-  urlRentas: string = 'http://192.168.10.208:3032/api/rentas/';//207:3033
+  urlRentas: string = 'http://192.168.10.207:4521/api/rentas/';//208:3032
   private logger = new Logger( 'ContribuyenteService' );
   constructor(
 
@@ -55,12 +55,14 @@ export class ContribuyenteService {
         },
         (err, res, body) => {
           if (err) {
-            reject('Error en la consulta Rentas');
-            throw new HttpException('ERROR', HttpStatus.INTERNAL_SERVER_ERROR );
+            reject( () => {
+              throw new HttpException('ERROR', HttpStatus.INTERNAL_SERVER_ERROR );
+            });
           }
           if ( !res ) {
-            reject('Revisar PlatPide');
-            throw new HttpException('Revisar PlatPide', HttpStatus.INTERNAL_SERVER_ERROR );
+            reject( () => {
+              throw new HttpException('Revisar PlatPide', HttpStatus.INTERNAL_SERVER_ERROR );
+            });
           }
           const { statusCode } = res;
           resolve({

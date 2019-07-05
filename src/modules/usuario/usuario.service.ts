@@ -11,7 +11,7 @@ export class UsuarioService {
     @InjectRepository( Usuario ) private usuarioRepository: Repository< Usuario >,
   ) {}
 
-  async obtenerUsuarios(
+  async obtenerUsuariosPorNombre(
     nombreUsuario: string,
   ): Promise< UsuarioRO[] > {
     const usuarios = await this.usuarioRepository.find({
@@ -19,6 +19,11 @@ export class UsuarioService {
         username: Like( `%${ nombreUsuario }%` ),
       },
     });
+    return usuarios;
+  }
+
+  async obtenerUsuarios(): Promise< UsuarioRO[] > {
+    const usuarios = await this.usuarioRepository.find();
     return usuarios;
   }
 

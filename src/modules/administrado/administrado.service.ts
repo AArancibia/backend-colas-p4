@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Administrado } from './administrado.entity';
-import { Repository } from 'typeorm';
+import { Repository, Transaction } from 'typeorm';
 import { AdministradoRO } from './administrado.dto';
 
 @Injectable()
@@ -10,6 +10,7 @@ export class AdministradoService {
     @InjectRepository( Administrado ) private administradoRepository: Repository< Administrado >,
   ) {}
 
+  //@Transaction({ isolation: "READ COMMITTED" })
   async guardarAdministrado(
     { apPrimer, apSegundo, prenombres },
     dni: string,

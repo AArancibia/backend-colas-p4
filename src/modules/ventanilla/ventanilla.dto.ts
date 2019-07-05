@@ -1,5 +1,5 @@
 export class VentanillaDTO {
-  codigoVentanilla: string;
+  codigoventanilla: string;
   ubicacion: string;
   idusuario: number;
 }

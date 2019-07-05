@@ -12,7 +12,12 @@ export class UsuarioController {
   filtroUsuarios(
     @Param( 'nombreUsuario' ) nombreUsuario: string,
   ) {
-    return this.usuarioService.obtenerUsuarios( nombreUsuario );
+    return this.usuarioService.obtenerUsuariosPorNombre( nombreUsuario );
+  }
+
+  @Get()
+  obtenerUsuarios() {
+    return this.usuarioService.obtenerUsuarios();
   }
 
 }

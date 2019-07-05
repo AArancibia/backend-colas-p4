@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { VentanillaService } from './ventanilla.service';
 import { VentanillaDTO } from './ventanilla.dto';
 
@@ -35,10 +35,16 @@ export class VentanillaController {
     return this.ventanillaService.ultimoEstadoVentanillas();
   }
 
-  @Get('vista')//:id/
-  ventanillaUltimoEstadoView(
-
+  @Put(':id/usuario/:idusuario')//:id/
+  asignarUsuarioAVentanilla(
+    @Param( 'id' ) idventanilla: number,
+    @Param( 'idusuario' ) idusuario: number,
   ) {
+    return this.ventanillaService.usuarioAVentanilla( idventanilla, idusuario );
+  }
+
+  @Get('vista')
+  ventanillaUltimoEstadoView() {
     return this.ventanillaService.viewVentanillaEstado();
   }
 

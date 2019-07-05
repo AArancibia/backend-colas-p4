@@ -7,7 +7,7 @@ import { getConnection, Repository } from 'typeorm';
 import * as moment from 'moment';
 import { Ventanilla } from '../modules/ventanilla/ventanilla.entity';
 import { Logger } from '@nestjs/common';
-import { VentanillaEstadoEntity } from '../modules/ventanilla/ventanilla-estado.entity';
+import { Usuario } from 'src/modules/usuario/usuario.entity';
 
 @WebSocketGateway( 8081, {
   namespace: 'ventanilla',
@@ -19,8 +19,8 @@ export class VentanillaGateway {
 
   constructor(
     @InjectRepository( Detestadoventanilla ) private detEstadoVentanillaRepository: Repository< Detestadoventanilla >,
-    @InjectRepository( Ventanilla) private ventanillaRepository: Repository< Ventanilla >,
-    @InjectRepository( VentanillaEstadoEntity ) private ventanillaEstadoViewRepository: Repository< VentanillaEstadoEntity >,
+    @InjectRepository( Ventanilla ) private ventanillaRepository: Repository< Ventanilla >,
+    @InjectRepository( Usuario ) private usuarioRepository: Repository< Usuario >,
   ) {}
 
   @SubscribeMessage( '[VENTANILLA] LISTA' )
@@ -33,20 +33,44 @@ export class VentanillaGateway {
     return ventanillas;
   }
 
+  @SubscribeMessage( '[VENTANILLA] ASIGNARUSUARIO')
+  async usuarioAVentanilla(
+    idventanilla: number,
+    idusuario: number,
+  ) {
+    const buscarVentanilla = await this.ventanillaRepository.findOne({ where: { idusuario }});
+    if ( buscarVentanilla ) {
+      await this.ventanillaRepository.update(
+        { id: buscarVentanilla.id },
+        { idusuario: null, }
+      );
+    }
+    let ventanilla = await this.ventanillaRepository.findOne({ where: { id: idventanilla } });
+    await this.ventanillaRepository.update(
+      { id: idventanilla  },
+      {
+        idusuario,
+      }
+    );
+    ventanilla = await this.ventanillaRepository.findOne({ where: { id: idventanilla }, relations: ['usuario'] });
+    return ventanilla;
+  }
+
   @SubscribeMessage( '[VENTANILLA] ULTIMOESTADO' )
   async ultimoEstadoVentanilla() {
-    const ventanillas = await this.ventanillaEstadoViewRepository
+    const ventanillas = await getConnection()
       .manager.query(
         `select * from ULTIMOESTADOVENTANILLA`,
       );
     const ultimoEstado = [];
     ventanillas.map(
       ( item, index, array ) => {
+        console.log( item );
         const {
           idticket, idtematica, idtramite, codigo, correlativo, urgente, fechaticket,
           idventanilla, idtipoticket, idadministrado, preferencial,
           tbVentanillaId, tbEstadoventanillaId, identificador, fecha,
-          id, codigo_ventanilla, ubicacion, idusuario, tipoatencion,
+          id, codigoventanilla, ubicacion, idusuario, tipoatencion,
         } = item;
         const elemento = {
           ticket: {
@@ -55,7 +79,7 @@ export class VentanillaGateway {
           },
           ventanilla: {
             id,
-            codigo_ventanilla, ubicacion,
+            codigoventanilla, ubicacion,
             idusuario, tipoatencion,
           },
           detestado: {

@@ -31,6 +31,13 @@ export class TicketController {
     return this.ticketService.asignarVentanilla( idticket, idventanilla );
   }
 
+  @Put( ':id/urgente' )
+  async ticketUrgente(
+    @Param( 'id' ) idticket: number
+  ) {
+    return this.ticketService.ticketUrgente( idticket );
+  }
+
   @Post( ':idticket/estado/:idestado' )
   guardarNuevoEstado(
     @Param( 'idticket' ) idticket: number,
