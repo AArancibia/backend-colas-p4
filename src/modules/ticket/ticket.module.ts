@@ -15,10 +15,22 @@ import { VentanillaService } from '../ventanilla/ventanilla.service';
 import { VentanillaModule } from '../ventanilla/ventanilla.module';
 import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
 import { DetestadoticketService } from './detestadoticket/detestadoticket.service';
+import { Estadoventanilla } from '../ventanilla/estadoventanilla/estadoventanilla.entity';
+import { Detestadoventanilla } from '../ventanilla/detestadoventanilla/detestadoventanilla.entity';
+import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
+import { Usuario } from '../usuario/usuario.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ Ticket, Estado, Tipoticket, Administrado, Ventanilla ]),
+    TypeOrmModule.forFeature([
+        Ticket, Estado, Tipoticket,
+        Administrado, Ventanilla,
+        Estadoventanilla,
+        Detestadoventanilla,
+        Detestadoticket,
+        Usuario,
+      ],
+    ),
     TipoticketModule,
     EstadoticketModule,
     DetestadoticketModule,

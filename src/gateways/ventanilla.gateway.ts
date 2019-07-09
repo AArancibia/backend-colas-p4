@@ -1,13 +1,10 @@
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { InjectRepository } from '@nestjs/typeorm';
-import { formatFechaCorta } from '../shared/utils';
 import { Detestadoventanilla } from '../modules/ventanilla/detestadoventanilla/detestadoventanilla.entity';
-import { Ticket } from '../modules/ticket/ticket.entity';
 import { getConnection, Repository } from 'typeorm';
-import * as moment from 'moment';
 import { Ventanilla } from '../modules/ventanilla/ventanilla.entity';
 import { Logger } from '@nestjs/common';
-import { Usuario } from 'src/modules/usuario/usuario.entity';
+import { Usuario } from '../modules/usuario/usuario.entity';
 
 @WebSocketGateway( 8081, {
   namespace: 'ventanilla',

@@ -38,6 +38,7 @@
     "moment-timezone": "^0.5.25",
     "pg": "^7.11.0",
     "reflect-metadata": "^0.1.12",
+    "request": "^2.88.0",
     "rimraf": "^2.6.2",
     "rxjs": "^6.3.3",
     "swagger-ui-express": "^4.0.6",

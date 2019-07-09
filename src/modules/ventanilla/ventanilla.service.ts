@@ -7,7 +7,6 @@ import { VentanillaDTO } from './ventanilla.dto';
 import { Detestadoventanilla } from './detestadoventanilla/detestadoventanilla.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
 import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
-import { log } from 'util';
 
 @Injectable()
 export class VentanillaService {

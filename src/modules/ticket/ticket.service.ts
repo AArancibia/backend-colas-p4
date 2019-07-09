@@ -98,7 +98,7 @@ export class TicketService {
     this.wsTicket.ws.emit( '[TICKET] Nuevo', ticketBD );
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
     this.wsTicket.ws.emit( '[TICKET] DETESTADO', ticketAEmitir );
-    const thread = spawn('./detestadoticket/detestadoworker.ts');
+    const thread = spawn('./detestadoticket/detestadoworker.ts');//ts
     const gateway = this.wsTicket;
     const detTicketService = this.detEstadoTicketService;
 
