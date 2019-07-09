@@ -34,7 +34,7 @@ export class Detestadoticket {
 
   @PrimaryGeneratedColumn( 'uuid', {
     name: 'identificador',
-    comment: 'Campo que es 3ra llave primaria'
+    comment: 'Campo que es 3ra llave primaria',
   } )
   identificador: string;
 

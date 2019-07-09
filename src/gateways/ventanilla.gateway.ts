@@ -42,17 +42,17 @@ export class VentanillaGateway {
     if ( buscarVentanilla ) {
       await this.ventanillaRepository.update(
         { id: buscarVentanilla.id },
-        { idusuario: null, }
+        { idusuario: null },
       );
     }
-    let ventanilla = await this.ventanillaRepository.findOne({ where: { id: idventanilla } });
+    //let ventanilla = await this.ventanillaRepository.findOne({ where: { id: idventanilla } });
     await this.ventanillaRepository.update(
       { id: idventanilla  },
       {
         idusuario,
-      }
+      },
     );
-    ventanilla = await this.ventanillaRepository.findOne({ where: { id: idventanilla }, relations: ['usuario'] });
+    const ventanilla = await this.ventanillaRepository.findOne({ where: { id: idventanilla }, relations: ['usuario'] });
     return ventanilla;
   }
 
@@ -65,7 +65,6 @@ export class VentanillaGateway {
     const ultimoEstado = [];
     ventanillas.map(
       ( item, index, array ) => {
-        console.log( item );
         const {
           idticket, idtematica, idtramite, codigo, correlativo, urgente, fechaticket,
           idventanilla, idtipoticket, idadministrado, preferencial,

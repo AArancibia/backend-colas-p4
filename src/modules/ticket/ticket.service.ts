@@ -11,6 +11,16 @@ import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { TicketGateway } from '../../gateways/ticket.gateway';
 import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
 import { VentanillaService } from '../ventanilla/ventanilla.service';
+import { DetestadoticketService } from './detestadoticket/detestadoticket.service';
+const threads = require('threads');
+const config  = threads.config;
+config.set({
+  basepath : {
+    node :  __dirname //+ '/directory',
+    //web  : 'http://myserver.local/thread-scripts',
+  },
+});
+const spawn   = threads.spawn;
 
 @Injectable()
 export class TicketService {
@@ -23,6 +33,7 @@ export class TicketService {
     @InjectRepository( Administrado ) private administradoRepository: Repository< Administrado >,
     @InjectRepository( Ventanilla ) private ventanillaRepository: Repository< Ventanilla >,
     private ventanillaService: VentanillaService,
+    private detEstadoTicketService: DetestadoticketService,
     private wsTicket: TicketGateway,
   ) {}
 
@@ -82,11 +93,22 @@ export class TicketService {
     }, { fecha: formatFechaLarga() });
     const ticketBD = await this.ticketRepository.findOne({
       where: { id: nuevoTicket.id },
-      relations: ['administrado', 'detEstados', 'estados'],
+      relations: ['administrado', 'detEstados', 'estados', 'tipoTicket' ],
     });
     this.wsTicket.ws.emit( '[TICKET] Nuevo', ticketBD );
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
     this.wsTicket.ws.emit( '[TICKET] DETESTADO', ticketAEmitir );
+    const thread = spawn('./detestadoticket/detestadoworker.ts');
+    const gateway = this.wsTicket;
+    const detTicketService = this.detEstadoTicketService;
+
+    thread
+      .send( ticketBD.detEstados )
+      .on('message', async function(message) {
+        const ticketSinAtender: number = await detTicketService.obtenerUltimoEstadoTicket( message[ 0 ].ticketId );
+        if ( ticketSinAtender === 1 ) gateway.ws.emit('[TICKET] SINATENDER', ticketBD );
+        thread.kill();
+      });
     return ticketBD;
   }
 
@@ -107,7 +129,6 @@ export class TicketService {
     } else if ( idestado == 2 ) {
       idestadoVentanilla = 1;
     }
-    this.logger.log( `${ idestadoVentanilla } - ${ idestado }` );
     await this.ventanillaService.guardarNuevoEstado( ticket.idventanilla, idestadoVentanilla );
     const guardarDetEstadoTicket = await this.detEstadoTicketRepository.createQueryBuilder()
       .insert()
@@ -219,21 +240,25 @@ export class TicketService {
   async ticketUrgente(
     idticket: number,
   ) {
-    const ticket = await this.ticketRepository.findOne({ where: { id: idticket }});
+    let ticket = await this.ticketRepository.findOne({ where: { id: idticket }});
     if ( !ticket ) throw new HttpException( `No se encuentra el ticket con id: ${ idticket }`, HttpStatus.NOT_FOUND );
     const ticketActualizado = await this.ticketRepository.update(
       { id: idticket },
       {
         urgente: true,
-      }
+      },
     );
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
     this.wsTicket.ws.emit( '[TICKET] DETESTADO', ticketAEmitir );
+    ticket = await this.ticketRepository.findOne({
+      where: { id: idticket },
+      relations: ['administrado', 'detEstados', 'estados'],
+    });
+    this.wsTicket.ws.emit('[TICKET] URGENTE', ticket );
     return ticketActualizado;
   }
 
   async obtenerTipoTicket( idtipoticket: number ): Promise< string > {
-    this.logger.log( idtipoticket );
     const ticket = await this.tipoTicketRepository.findOne(
       {
         where: {
@@ -256,7 +281,6 @@ export class TicketService {
         order: { correlativo: 'DESC' },
       },
     );
-    this.logger.log( ticket + ' CORRELATIVO' );
     let correlativo = !ticket ? 0 : ticket.correlativo++;
     correlativo++;
     return correlativo;

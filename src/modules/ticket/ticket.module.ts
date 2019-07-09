@@ -14,6 +14,7 @@ import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { VentanillaService } from '../ventanilla/ventanilla.service';
 import { VentanillaModule } from '../ventanilla/ventanilla.module';
 import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
+import { DetestadoticketService } from './detestadoticket/detestadoticket.service';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
     VentanillaService,
     TicketService,
     TicketGateway,
+    DetestadoticketService,
     VentanillaGateway,
   ],
 })

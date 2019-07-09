@@ -35,6 +35,11 @@ export class VentanillaController {
     return this.ventanillaService.ultimoEstadoVentanillas();
   }
 
+  @Get('vista')
+  ventanillaUltimoEstadoView() {
+    return this.ventanillaService.viewVentanillaEstado();
+  }
+
   @Put(':id/usuario/:idusuario')//:id/
   asignarUsuarioAVentanilla(
     @Param( 'id' ) idventanilla: number,
@@ -43,9 +48,12 @@ export class VentanillaController {
     return this.ventanillaService.usuarioAVentanilla( idventanilla, idusuario );
   }
 
-  @Get('vista')
-  ventanillaUltimoEstadoView() {
-    return this.ventanillaService.viewVentanillaEstado();
+  @Put( ':id/:tipo' )
+  async editarTipoAtencion(
+    @Param( 'id' ) id: number,
+    @Param( 'tipo' ) tipo: string,
+  ) {
+    return this.ventanillaService.editarTipoAtencion( id, tipo );
   }
 
   @Post(':id/estado/:idestado')

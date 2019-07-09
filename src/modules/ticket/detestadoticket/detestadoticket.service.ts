@@ -12,6 +12,19 @@ export class DetestadoticketService {
     @InjectRepository( Detestadoticket ) private detestadoRepository: Repository< Detestadoticket >,
   ) {}
 
+  async obtenerUltimoEstadoTicket( idticket: number ): Promise< any > {
+    const detEstado = await this.detestadoRepository.findOne({
+      where: {
+        ticketId: idticket,
+      },
+      relations: ['estado', 'ticket'],
+      order: {
+        fecha: 'DESC',
+      },
+    });
+    return detEstado.estadoticketId;
+  }
+
   async getDetEstadoTicket() {
     const fecha2 = moment( formatFechaCorta() ).add('days', 1).format('YYYY-MM-DD');
     const qb = await this.detestadoRepository.createQueryBuilder('t1');

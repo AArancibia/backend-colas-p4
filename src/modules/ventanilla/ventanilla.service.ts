@@ -7,6 +7,7 @@ import { VentanillaDTO } from './ventanilla.dto';
 import { Detestadoventanilla } from './detestadoventanilla/detestadoventanilla.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
 import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
+import { log } from 'util';
 
 @Injectable()
 export class VentanillaService {
@@ -32,7 +33,7 @@ export class VentanillaService {
     idventanilla: number,
     idusuario: number,
   ) {
-    const ventanillaActualizada = this.ventanillaGateway.usuarioAVentanilla( idventanilla, idusuario );
+    const ventanillaActualizada = await this.ventanillaGateway.usuarioAVentanilla( idventanilla, idusuario );
     const ventanillas = await this.ventanillaGateway.obtenerVentanillas();
     this.ventanillaGateway.wsVentanilla.emit( '[VENTANILLA] LISTA', ventanillas );
     return ventanillaActualizada;
@@ -93,7 +94,6 @@ export class VentanillaService {
     if ( !antiguo ) {
       this.ventanillaGateway.wsVentanilla.emit( '[VENTANILLA] ULTIMOESTADO', detEstadoVentanilla);
     }
-    this.logger.log( detEstadoVentanilla );
     return guardarDetEstadoVentanilla.identifiers[ 0 ];
   }
 
@@ -102,12 +102,29 @@ export class VentanillaService {
   ) {
     let ultimoEstado: any[] = await this.ventanillaGateway.ultimoEstadoVentanilla( );
     for (let i = 0; i < ultimoEstado.length; i++ ) {
-      this.logger.log( ultimoEstado[ i ].tbVentanillaId + '  ' + idventanilla );
       if ( ultimoEstado[ i ].tbVentanillaId == idventanilla ) {
         return ultimoEstado[ i ];
       }
     }
     return null;
+  }
+
+  async editarTipoAtencion(
+    id: number,
+    tipoatencion: string,
+  ) {
+    let ventanillaActualizada = await this.ventanillaRepository.findOne({
+      where: { id },
+      select: [ 'idusuario', 'codigoventanilla', 'tipoatencion', 'ubicacion' ],
+    });
+    await this.ventanillaRepository.update( id, {
+      ...ventanillaActualizada,
+      tipoatencion,
+    });
+    ventanillaActualizada = await this.ventanillaRepository.findOne({ where: { id }});
+    const ventanillas = await this.ventanillaGateway.obtenerVentanillas();
+    this.ventanillaGateway.wsVentanilla.emit( '[VENTANILLA] LISTA', ventanillas );
+    return ventanillaActualizada;
   }
 
   async ultimoEstadoVentanillas() {

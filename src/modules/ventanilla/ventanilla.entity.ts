@@ -17,7 +17,6 @@ export class Ventanilla {
 
   @Column('varchar', {
     nullable: true,
-    unique: true,
   })
   tipoatencion: string;
 
