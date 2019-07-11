@@ -6,10 +6,16 @@ export class Estado {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    name: 'nombre',
+    comment: 'Nombre del estado del ticket'
+  })
   nombre: string;
 
-  @Column()
+  @Column({
+    name: 'abr',
+    comment: 'Abreviatura del estado del ticket'
+  })
   abr: string;
 
   @ManyToMany( type => Ticket )

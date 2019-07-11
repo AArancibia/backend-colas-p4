@@ -68,3 +68,29 @@ SELECT R1.*,R2.* FROM
 									 ) as R1
 					on R1.idventanilla = R2."tbVentanillaId"
 					order by R2.codigoventanilla
+
+/*
+    VISTA ULTIMOSESTADOTICKET CON ADMINISTRADO
+*/
+CREATE VIEW ULTIMOESTADOTICKET AS
+SELECT
+				"t1"."estadoticketId",
+				"t1"."ticketId",
+				"t1"."identificador",
+				"t1"."fecha" as detallefecha,
+				"ticket".*,
+				"tb_administrado"."id" as administradoid,
+				"tb_administrado"."nrodoc",
+				"tb_administrado"."nombre",
+				"tb_administrado"."apepat",
+				"tb_administrado"."apemat",
+				"tb_administrado"."idcontribuyente"
+				FROM "ticket_estados_estadoticket" "t1"
+							INNER JOIN "ticket" "ticket"
+								ON "ticket"."id"="t1"."ticketId"
+							INNER JOIN "tb_administrado" "tb_administrado"
+								ON "tb_administrado"."id" = "ticket"."idadministrado"
+									WHERE "t1"."fecha" = (
+										SELECT max( "t2".fecha ) FROM "ticket_estados_estadoticket"
+										"t2" WHERE "t1"."ticketId" = "t2"."ticketId")
+									AND  "t1"."fecha" between CURRENT_DATE and CURRENT_DATE + INTERVAL '1 day'

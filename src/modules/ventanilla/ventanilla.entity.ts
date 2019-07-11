@@ -1,9 +1,9 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, RelationId, Table } from 'typeorm';
 import { Usuario } from '../usuario/usuario.entity';
 import { Estadoventanilla } from './estadoventanilla/estadoventanilla.entity';
 import { Ticket } from '../ticket/ticket.entity';
 
-@Entity( 'tb_ventanilla')
+@Entity( 'tb_ventanilla' )
 export class Ventanilla {
   @PrimaryGeneratedColumn()
   id: number;

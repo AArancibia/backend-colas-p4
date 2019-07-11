@@ -11,6 +11,11 @@ export class TicketController {
 
   }
 
+  @Get('prueba')
+  async prueba() {
+    return this.ticketService.prueba();
+  }
+
   @Get()
   async obtenerTickets() {
     return this.ticketService.getTickets();

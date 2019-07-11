@@ -6,7 +6,7 @@ import {
   WebSocketServer, WsResponse,
 } from '@nestjs/websockets';
 import { Logger, Injectable } from '@nestjs/common';
-import { In, Not, Repository } from 'typeorm';
+import { getConnection, In, Not, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { formatFechaCorta, formatFechaLarga } from '../shared/utils';
 import { Ticket } from '../modules/ticket/ticket.entity';
@@ -59,6 +59,39 @@ export class TicketGateway {
       },
     );
     return ticketsRO;
+  }
+
+  @SubscribeMessage('[TICKET] LLAMARTICKET')
+  async llamadaTickets() {
+    const tickets = await getConnection()
+      .manager.query(
+        `select * from ULTIMOESTADOTICKET`,
+      );
+    const ultimoEstado = [];
+    tickets.map(
+      ( item, index, array ) => {
+        const {
+          idticket, idtematica, idtramite, codigo, correlativo, urgente, fecha,
+          fechacorta, idventanilla, idtipoticket, idadministrado, preferencial,
+          estadoticketId, ticketId, identificador, detallefecha,
+          administradoid, nrodoc, nombre, apepat, apemat, idcontribuyente,
+        } = item;
+        const elemento = {
+          estadoticketId, ticketId, identificador, fecha: detallefecha,
+          ticket: {
+            id: idticket, idtematica, idtramite, codigo, correlativo, urgente, fecha,
+            idventanilla, idtipoticket, idadministrado, preferencial, fechacorta,
+            administrado: {
+              id: administradoid, nrodoc, nombre, apepat, apemat, idcontribuyente,
+            },
+          },
+        };
+        ultimoEstado.push(
+          elemento,
+        );
+      },
+      );
+    return ultimoEstado;
   }
 
   @SubscribeMessage( '[TICKET] DETESTADO' )

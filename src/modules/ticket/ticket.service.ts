@@ -37,6 +37,11 @@ export class TicketService {
     private wsTicket: TicketGateway,
   ) {}
 
+  async prueba() {
+    const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
+    return ticketAEmitir;
+  }
+
   async actualizarTematicaOrTramite(
     idticket: number,
     ticket: any,
@@ -186,6 +191,8 @@ export class TicketService {
     this.wsTicket.ws.emit( '[TICKET] DETESTADO', ticketAEmitir );
     this.wsTicket.ws.emit( 'ventanillaAsignadaAlTicket', ticketparaEmitir );
     await this.ventanillaService.guardarNuevoEstado( idventanilla, 1 );
+    const ticketllamando = await this.wsTicket.llamadaTickets();
+    this.wsTicket.ws.emit( '[TICKET] LLAMARTICKET', ticketllamando );
     return actualizarTicket;
   }
 
