@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { VentanillaService } from './ventanilla.service';
 import { VentanillaDTO } from './ventanilla.dto';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('Ventanilla')
 @Controller('ventanilla')
 export class VentanillaController {
   constructor(

@@ -37,11 +37,6 @@ export class TicketService {
     private wsTicket: TicketGateway,
   ) {}
 
-  async prueba() {
-    const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
-    return ticketAEmitir;
-  }
-
   async actualizarTematicaOrTramite(
     idticket: number,
     ticket: any,
@@ -110,7 +105,8 @@ export class TicketService {
     thread
       .send( ticketBD.detEstados )
       .on('message', async function(message) {
-        const ticketSinAtender: number = await detTicketService.obtenerUltimoEstadoTicket( message[ 0 ].ticketId );
+        const ticketSinAtender: number = 
+              await detTicketService.obtenerUltimoEstadoTicket( message[ 0 ].ticketId );
         if ( ticketSinAtender === 1 ) gateway.ws.emit('[TICKET] SINATENDER', ticketBD );
         thread.kill();
       });
@@ -121,11 +117,9 @@ export class TicketService {
     idticket: number,
     idestado: number,
   ) {
-    const ticket = await this.ticketRepository.findOne( {
-      where: { id: idticket },
-      //relations: [ 'estados', 'administrado', 'detEstados' ],
-    });
-    if ( !ticket ) throw new HttpException( `No existe el ticket con el id: ${ idticket }`, HttpStatus.NOT_FOUND );
+    const ticket = await this.ticketRepository.findOne( { where: { id: idticket }, });
+    if ( !ticket ) throw new 
+                        HttpException( `No existe el ticket con el id: ${ idticket }`, HttpStatus.NOT_FOUND );
     let idestadoVentanilla;
     if ( idestado == 4  ||  idestado == 6 ) {
       idestadoVentanilla = 3;

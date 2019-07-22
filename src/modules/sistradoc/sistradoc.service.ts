@@ -9,7 +9,8 @@ export class SistradocService {
 
   async getAreas(): Promise< any > {
     const select = new Promise( async (resolve, reject) => {
-      const areas = await request.get( `${ this.url }sistradoc/areas`, { json: true }, (err, res, body) => {
+      const areas = await request.get( `${ this.url }sistradoc/areas`, { json: true },
+      (err, res, body) => {
         if (err) { reject('Error en el GET AREAS'); }
         const { statusCode } = res;
         resolve({

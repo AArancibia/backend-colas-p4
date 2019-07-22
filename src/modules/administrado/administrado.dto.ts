@@ -16,12 +16,20 @@ export class AdministradoDto {
 }
 
 export class AdministradoRO {
+  @ApiModelProperty()
   id: number;
+  @ApiModelProperty()
   nrodoc: string;
+  @ApiModelProperty()
   nombre: string;
+  @ApiModelProperty()
   apepat: string;
+  @ApiModelProperty()
   apemat: string;
+  @ApiModelProperty()
   idcontribuyente: number;
+  @ApiModelProperty()
   tipodoc?: string;
+  @ApiModelProperty()
   foto?: string;
 }

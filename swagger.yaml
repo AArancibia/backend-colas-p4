@@ -1,0 +1,352 @@
+swagger: '2.0'
+info:
+  description: Aquí se encuentran todos los servicios del proyecto de Colas de la MuniVES
+  version: 1.0.0
+  title: API REST - Proyecto Colas - Municipalidad de Villa El Salvador
+basePath: /api
+tags: []
+schemes:
+  - http
+host: 'localhost:4000'
+paths:
+  /:
+    get:
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /ticket:
+    get:
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      parameters:
+        - name: TicketDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/TicketDto'
+      responses:
+        '201':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/ticket/{idticket}/asignar/{idventanilla}':
+    put:
+      parameters:
+        - type: number
+          name: idventanilla
+          required: true
+          in: path
+        - type: number
+          name: idticket
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/ticket/{id}/urgente':
+    put:
+      parameters:
+        - type: number
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/ticket/{idticket}/estado/{idestado}':
+    post:
+      parameters:
+        - type: number
+          name: idestado
+          required: true
+          in: path
+        - type: number
+          name: idticket
+          required: true
+          in: path
+      responses:
+        '201':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/ticket/{idticket}/derivar/{idventanilla}':
+    post:
+      parameters:
+        - type: number
+          name: idventanilla
+          required: true
+          in: path
+        - type: number
+          name: idticket
+          required: true
+          in: path
+      responses:
+        '201':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/ticket/{idticket}/tematica/tramite':
+    put:
+      parameters:
+        - type: number
+          name: idticket
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /detestadoticket:
+    get:
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /ventanilla:
+    get:
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      parameters:
+        - name: VentanillaDTO
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/VentanillaDTO'
+      responses:
+        '201':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/ventanilla/usuario/{idusuario}':
+    get:
+      parameters:
+        - type: number
+          name: idusuario
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/ventanilla/{id}/ultimoestado':
+    get:
+      parameters:
+        - type: number
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /ventanilla/ultimoestado:
+    get:
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /ventanilla/vista:
+    get:
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/ventanilla/{id}/usuario/{idusuario}':
+    put:
+      parameters:
+        - type: number
+          name: idusuario
+          required: true
+          in: path
+        - type: number
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/ventanilla/{id}/{tipo}':
+    put:
+      parameters:
+        - type: string
+          name: tipo
+          required: true
+          in: path
+        - type: number
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/ventanilla/{id}/estado/{idestado}':
+    post:
+      parameters:
+        - type: number
+          name: idestado
+          required: true
+          in: path
+        - type: number
+          name: id
+          required: true
+          in: path
+      responses:
+        '201':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /detestadoventanilla:
+    get:
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/usuario/{nombreUsuario}':
+    get:
+      parameters:
+        - type: string
+          name: nombreUsuario
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /usuario:
+    get:
+      responses:
+        '200':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/administrado/{dni}':
+    post:
+      parameters:
+        - type: string
+          name: dni
+          required: true
+          in: path
+      responses:
+        '201':
+          description: ''
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /sistradoc/areas:
+    get:
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Sistradoc
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /rentas/contribuyente:
+    post:
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Rentas
+      produces:
+        - application/json
+      consumes:
+        - application/json
+definitions:
+  TicketDto:
+    type: object
+    properties:
+      idadministrado:
+        type: number
+      idtematica:
+        type: number
+      idtipoticket:
+        type: number
+      preferencial:
+        type: boolean
+      urgente:
+        type: boolean
+      idtramite:
+        type: number
+    required:
+      - idadministrado
+      - idtematica
+      - idtipoticket
+      - preferencial
+      - urgente
+      - idtramite
+  VentanillaDTO:
+    type: object
+    properties: {}

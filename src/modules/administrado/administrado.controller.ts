@@ -2,7 +2,9 @@ import { Controller, Logger, Param, Post } from '@nestjs/common';
 import { AdministradoService } from './administrado.service';
 import { ContribuyenteService } from '../rentas/contribuyente/contribuyente.service';
 import { AdministradoRO } from './administrado.dto';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('Administrado')
 @Controller('administrado')
 export class AdministradoController {
   private logger = new Logger( 'AdministradoController' );

@@ -9,12 +9,12 @@ import { ContribuyenteModule } from '../rentas/contribuyente/contribuyente.modul
 import { ContribuyenteService } from '../rentas/contribuyente/contribuyente.service';
 
 @Module({
-  controllers: [ AdministradoController ],
-  providers: [ AdministradoService, ContribuyenteService ],
   imports: [
     TypeOrmModule.forFeature( [ Administrado ] ),
     TipodocModule,
     DettipodocadmiModule,
   ],
+  controllers: [ AdministradoController ],
+  providers: [ AdministradoService, ContribuyenteService ],
 })
 export class AdministradoModule {}

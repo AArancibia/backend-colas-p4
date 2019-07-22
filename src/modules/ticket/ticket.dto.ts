@@ -1,5 +1,7 @@
 import { IsBoolean, IsEmpty, IsNotEmpty, IsNotIn, IsNumber } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { Administrado } from '../administrado/administrado.entity';
+import { AdministradoRO } from '../administrado/administrado.dto';
 
 export class TicketDto {
 
@@ -50,6 +52,26 @@ export class TicketDto {
 }
 
 export class TicketRO {
+  @ApiModelProperty()
   idticket: number;
+  @ApiModelProperty()
   codigo: string;
+  @ApiModelProperty()
+  fecha: string;
+  @ApiModelProperty()
+  idadministrado: number;
+  @ApiModelProperty()
+  idtipoticket: number;
+  @ApiModelProperty()
+  idtematica: number;
+  @ApiModelProperty()
+  idtramite: number;
+  @ApiModelProperty()
+  preferencial: boolean;
+  @ApiModelProperty()
+  urgente: boolean;
+  @ApiModelProperty()
+  idventanilla: number;
+  @ApiModelProperty()
+  administrado: AdministradoRO;
 }

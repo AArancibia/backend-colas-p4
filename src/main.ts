@@ -11,7 +11,7 @@ const data = cargarConfiguracion();
 const PORT = data.PORT;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create( AppModule );
   const environment = process.env.NODE_ENV;
   if ( environment === 'development' ) {
     const document = SwaggerModule.createDocument( app, swaggerBaseConfig );

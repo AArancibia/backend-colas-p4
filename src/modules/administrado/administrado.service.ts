@@ -10,16 +10,12 @@ export class AdministradoService {
     @InjectRepository( Administrado ) private administradoRepository: Repository< Administrado >,
   ) {}
 
-  //@Transaction({ isolation: "READ COMMITTED" })
   async guardarAdministrado(
-    { apPrimer, apSegundo, prenombres },
-    dni: string,
+    { apPrimer, apSegundo, prenombres }, dni: string,
     idcontribuyente?: number,
   ): Promise< AdministradoRO > {
     const administrado = await this.administradoRepository.findOne({
-      where: {
-        nrodoc: dni,
-      },
+      where: { nrodoc: dni },
     });
     if ( !administrado ) {
       const insertAdministrado = await this.administradoRepository.insert({
