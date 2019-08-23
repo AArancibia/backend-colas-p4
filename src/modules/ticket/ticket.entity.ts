@@ -1,4 +1,15 @@
-import { BeforeInsert, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { Usuario } from '../usuario/usuario.entity';
 import { Tipoticket } from './tipoticket/tipoticket.entity';
@@ -7,9 +18,8 @@ import { Estado } from './estadoticket/estadoticket.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
 import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
 
-@Entity( 'ticket' )
+@Entity('ticket')
 export class Ticket {
-  
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -37,7 +47,7 @@ export class Ticket {
   })
   preferencial: boolean;
 
-  @Column( 'bigint', {
+  @Column('bigint', {
     nullable: false,
   })
   correlativo: number;
@@ -47,18 +57,18 @@ export class Ticket {
   })
   urgente: boolean;
 
-  @Column( 'date')
+  @Column('date')
   fechacorta: Date | string;
 
-  @ManyToMany( type => Estado, { cascade: true } )
+  @ManyToMany(type => Estado, { cascade: true })
   @JoinTable()
   estados: Estado[];
 
   /* PARA PODER OBTERNER LOS DETESTADOS DEL TICKET */
-  @OneToMany( type => Detestadoticket, det => det.ticket, { cascade: true  } )
+  @OneToMany(type => Detestadoticket, det => det.ticket, { cascade: true })
   detEstados: Detestadoticket[];
 
-  @ManyToOne( type => Ventanilla, ventanilla => ventanilla.id )
+  @ManyToOne(type => Ventanilla, ventanilla => ventanilla.id)
   @JoinColumn({ name: 'idventanilla' })
   ventanilla: Ventanilla;
 
@@ -67,7 +77,7 @@ export class Ticket {
   })
   idventanilla: number;
 
-  @ManyToOne( type => Tipoticket, tipoTicket => tipoTicket.idtipoticket )
+  @ManyToOne(type => Tipoticket, tipoTicket => tipoTicket.idtipoticket)
   @JoinColumn({ name: 'idtipoticket' })
   tipoTicket: Tipoticket;
 
@@ -76,7 +86,7 @@ export class Ticket {
   })
   idtipoticket: number;
 
-  @ManyToOne( type => Administrado, administrado => administrado.id )
+  @ManyToOne(type => Administrado, administrado => administrado.id)
   @JoinColumn({ name: 'idadministrado' })
   administrado: Administrado;
 
@@ -85,7 +95,7 @@ export class Ticket {
   })
   idadministrado: number;
 
-  @RelationId( ( tickets: Ticket ) => tickets.estados )
+  @RelationId((tickets: Ticket) => tickets.estados)
   estadosIds: number[];
 
   @BeforeInsert()
@@ -97,5 +107,4 @@ export class Ticket {
   asignarFechaCorta() {
     this.fechacorta = formatFechaCorta();
   }
-
 }

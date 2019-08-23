@@ -22,9 +22,22 @@ config.set({
 });
 const spawn   = threads.spawn;
 
+/**
+ * Servicio del Modulo Ticket
+ */
 @Injectable()
 export class TicketService {
+
+  /**
+   * Variable Logger para obtener los log
+   * @var
+   */
   private logger = new Logger( 'TicketService' );
+
+  /**
+   * Constructor de la clase TicketService
+   * @constructor
+   */
   constructor(
     @InjectRepository( Ticket ) private ticketRepository: Repository< Ticket >,
     @InjectRepository( Estado ) private estadoRepository: Repository< Estado >,
@@ -37,6 +50,13 @@ export class TicketService {
     private wsTicket: TicketGateway,
   ) {}
 
+  /**
+   * Servicio para actualizazr idtematica o idtramite del Ticket
+   * @param {number} idticket - Id del Ticket
+   * @param {number} ticket - Ticket a Actualizar
+   * @function actualizarTematicaOrTramite
+   * @returns {Ticket} Ticket actualizado.
+   */
   async actualizarTematicaOrTramite(
     idticket: number,
     ticket: any,
@@ -50,6 +70,11 @@ export class TicketService {
     return ticketActualizado ;
   }
 
+  /**
+   * Servicio para listar Tickets
+   * @function getTickets
+   * @returns {(Ticket|Array)} Lista de Tickets.
+   */
   async getTickets() {
     const tickets = await this.ticketRepository.find({
       relations: [ 'administrado', 'detEstados', 'estados' ],
@@ -72,6 +97,12 @@ export class TicketService {
     return ticketsRO;
   }
 
+  /**
+   * Servicio para actualizazr idtematica o idtramite del Ticket
+   * @param {TicketDto} ticket - Clase TicketDto
+   * @function crearTicket
+   * @returns {Ticket} Nuevo Ticket creado.
+   */
   async crearTicket( ticket: TicketDto ) {
     const { idtipoticket, preferencial, idadministrado, urgente } = ticket;
     const estado = await this.estadoRepository.findOne( { where: { idestado: 1 } });
@@ -113,6 +144,13 @@ export class TicketService {
     return ticketBD;
   }
 
+  /**
+   * Servicio para actualizazr idtematica o idtramite del Ticket
+   * @param {number} idticket -  Id del Ticket
+   * @param {number} idestado -  Id de EstadoTicket
+   * @function guardarNuevoEstado
+   * @returns {Ticket} Ticket Actualizado.
+   */
   async guardarNuevoEstado(
     idticket: number,
     idestado: number,
@@ -149,6 +187,15 @@ export class TicketService {
     return ticketActualizado;
   }
 
+  /**
+   * Servicio para asignar la ventanilla a un Ticket,
+   * y registra un nuevo estado para el ticket ( Llamando ) y un nuevo estado para
+   * la ventanilla ( Llamando )
+   * @param {number} idticket -  Id del Ticket
+   * @param {number} idventanilla -  Id de Ventanilla
+   * @function asignarVentanilla
+   * @returns {Ticket} Ticket Actualizado.
+   */
   async asignarVentanilla(
     idticket: number,
     idventanilla: number,
@@ -190,6 +237,14 @@ export class TicketService {
     return actualizarTicket;
   }
 
+  /**
+   * Servicio para derivar ticket a otra ventanilla, reseteando los estados del ticket a
+   * Derivado y Espera
+   * @param {number} idticket -  Id del Ticket
+   * @param {number} idventanilla -  Id de la Ventanilla
+   * @function guardarNuevoEstado
+   * @returns {Ticket} Ticket Actualizado.
+   */
   async derivarOtraVentanilla(
     idticket: number,
     idventanilla: number,
@@ -238,6 +293,12 @@ export class TicketService {
     return ticketaEmitir;
   }
 
+  /**
+   * Servicio para asignar urgencia a Ticket
+   * @param {number} idticket -  Id del Ticket
+   * @function ticketUrgente
+   * @returns {Ticket} Ticket Actualizado.
+   */
   async ticketUrgente(
     idticket: number,
   ) {
@@ -259,6 +320,12 @@ export class TicketService {
     return ticketActualizado;
   }
 
+  /**
+   * Funcion para consulta la entidad TipoTicket y obtener la abreviatura del tipo de Ticket
+   * @param {number} idticket -  Id del Ticket
+   * @function obtenerTipoTicket
+   * @returns {string} Abreviatura del tipo  de Ticket
+   */
   async obtenerTipoTicket( idtipoticket: number ): Promise< string > {
     const ticket = await this.tipoTicketRepository.findOne(
       {
@@ -271,6 +338,14 @@ export class TicketService {
     return ticket.abr;
   }
 
+  /**
+   * Funcion para consulta la entidad Ticket y traer el ultimo correlativo de ticket y sumarle mas uno para
+   * la asignacion a nuevo Ticket
+   * @param {number} idtipoticket -  Id del tipo de Ticket
+   * @param {Date} fechacorta -  Fecha Corta del Ticket
+   * @function obtenerTipoTicket
+   * @returns {number} Correlativo del Nuevo Ticket
+   */
   async obtenerCorrelativo( idtipoticket: number, fechacorta: Date | string ): Promise< number > {
     const ticket = await this.ticketRepository.findOne(
       {

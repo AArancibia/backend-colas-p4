@@ -3,7 +3,8 @@ import {
   OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer, WsResponse,
+  WebSocketServer,
+  WsResponse,
 } from '@nestjs/websockets';
 import { Logger, Injectable } from '@nestjs/common';
 import { getConnection, In, Not, Repository } from 'typeorm';
@@ -14,109 +15,141 @@ import { Detestadoticket } from '../modules/ticket/detestadoticket/detestadotick
 import * as momenttz from 'moment-timezone';
 import * as moment from 'moment';
 
-@WebSocketGateway( 8081, {
+@WebSocketGateway(8081, {
   namespace: 'ticket',
+  //transports: ['websocket'],
 })
 export class TicketGateway {
-  logger = new Logger( 'WebSocketsTicket' );
+  logger = new Logger('WebSocketsTicket');
   @WebSocketServer()
   ws: any;
   constructor(
-    @InjectRepository( Ticket ) private ticketRepository: Repository< Ticket >,
-    @InjectRepository( Detestadoticket ) private detestadoRepository: Repository< Detestadoticket >,
+    @InjectRepository(Ticket) private ticketRepository: Repository<Ticket>,
+    @InjectRepository(Detestadoticket)
+    private detestadoRepository: Repository<Detestadoticket>,
   ) {}
 
-  private toReponseObject( ticket: Ticket ) {
-    for ( let i = 0; i <= ticket.estadosIds.length; i++ ) {
-      const estado = ticket.estadosIds[ i ];
-      this.logger.log( estado );
-      if ( estado == 4 ) {
-        this.logger.log( 'hay 4');
+  private toReponseObject(ticket: Ticket) {
+    for (let i = 0; i <= ticket.estadosIds.length; i++) {
+      const estado = ticket.estadosIds[i];
+      this.logger.log(estado);
+      if (estado == 4) {
+        this.logger.log('hay 4');
         return;
       }
     }
     return ticket;
   }
 
-  @SubscribeMessage( '[TICKET] Lista' )
-  async listarTickets( client, data ): Promise< any > { //WsResponse< TicketRO >
+  @SubscribeMessage('[TICKET] Lista')
+  async listarTickets(client, data): Promise<any> {
+    //WsResponse< TicketRO >
     const tickets = await this.ticketRepository.find({
-      relations: [ 'estados', 'administrado', 'detEstados', 'tipoTicket' ],
+      relations: ['estados', 'administrado', 'detEstados', 'tipoTicket'],
       where: {
         fechacorta: formatFechaCorta(),
       },
       order: { fecha: 'ASC' },
     });
     const ticketsRO: Ticket[] = [];
-    tickets.map(
-      ticket => {
-        ticket.detEstados.sort( ( a, b ) => new Date( b.fecha ).getTime() - new Date( a.fecha).getTime() );
-        const ultimoEstado = ticket.detEstados[ 0 ].estadoticketId;
-        if ( ultimoEstado === 4 || ultimoEstado === 6 ) {
-          return;
-        }
-        ticketsRO.push( ticket );
-      },
-    );
+    tickets.map(ticket => {
+      ticket.detEstados.sort(
+        (a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime(),
+      );
+      const ultimoEstado = ticket.detEstados[0].estadoticketId;
+      if (ultimoEstado === 4 || ultimoEstado === 6) {
+        return;
+      }
+      ticketsRO.push(ticket);
+    });
     return ticketsRO;
   }
 
   @SubscribeMessage('[TICKET] LLAMARTICKET')
   async llamadaTickets() {
-    const tickets = await getConnection()
-      .manager.query(
-        `select * from ULTIMOESTADOTICKET`,
-      );
+    const tickets = await getConnection().manager.query(
+      `select * from ULTIMOESTADOTICKET`,
+    );
     const ultimoEstado = [];
-    tickets.map(
-      ( item, index, array ) => {
-        const {
-          idticket, idtematica, idtramite, codigo, correlativo, urgente, fecha,
-          fechacorta, idventanilla, idtipoticket, idadministrado, preferencial,
-          estadoticketId, ticketId, identificador, detallefecha,
-          administradoid, nrodoc, nombre, apepat, apemat, idcontribuyente,
-        } = item;
-        const elemento = {
-          estadoticketId, ticketId, identificador, fecha: detallefecha,
-          ticket: {
-            id: idticket, idtematica, idtramite, codigo, correlativo, urgente, fecha,
-            idventanilla, idtipoticket, idadministrado, preferencial, fechacorta,
-            administrado: {
-              id: administradoid, nrodoc, nombre, apepat, apemat, idcontribuyente,
-            },
+    tickets.map((item, index, array) => {
+      const {
+        idticket,
+        idtematica,
+        idtramite,
+        codigo,
+        correlativo,
+        urgente,
+        fecha,
+        fechacorta,
+        idventanilla,
+        idtipoticket,
+        idadministrado,
+        preferencial,
+        estadoticketId,
+        ticketId,
+        identificador,
+        detallefecha,
+        administradoid,
+        nrodoc,
+        nombre,
+        apepat,
+        apemat,
+        idcontribuyente,
+      } = item;
+      const elemento = {
+        estadoticketId,
+        ticketId,
+        identificador,
+        fecha: detallefecha,
+        ticket: {
+          id: idticket,
+          idtematica,
+          idtramite,
+          codigo,
+          correlativo,
+          urgente,
+          fecha,
+          idventanilla,
+          idtipoticket,
+          idadministrado,
+          preferencial,
+          fechacorta,
+          administrado: {
+            id: administradoid,
+            nrodoc,
+            nombre,
+            apepat,
+            apemat,
+            idcontribuyente,
           },
-        };
-        ultimoEstado.push(
-          elemento,
-        );
-      },
-      );
+        },
+      };
+      ultimoEstado.push(elemento);
+    });
     return ultimoEstado;
   }
 
-  @SubscribeMessage( '[TICKET] DETESTADO' )
+  @SubscribeMessage('[TICKET] DETESTADO')
   async getDetEstadoTicket() {
-    const fecha2 = moment( formatFechaCorta() ).add('days', 1).format('YYYY-MM-DD');
+    const fecha2 = moment(formatFechaCorta())
+      .add('days', 1)
+      .format('YYYY-MM-DD');
     const qb = await this.detestadoRepository.createQueryBuilder('t1');
     const detTickets = qb
-      .innerJoinAndSelect( 't1.ticket', 'ticket' )  // Ticket , 'ticket', 'ticket.id = t1.ticketId'
-      .where(
-        sq => {
-          const subQuery = qb.subQuery()
-            .select('max( fecha )')
-            .from( Detestadoticket, 't2' )
-            .where( 't1.ticketId = t2.ticketId' )
-            .getQuery();
-          return 't1.fecha = ' + subQuery;
-        },
-      )
-      .andWhere(
-        ' t1.fecha between :fec1 and :fec2 ',
-        {
-          fec1: `${ formatFechaCorta() } ` + '00:00:00',
-          fec2: `${ fecha2 } ` + '00:00:00',
-        },
-      )
+      .innerJoinAndSelect('t1.ticket', 'ticket') // Ticket , 'ticket', 'ticket.id = t1.ticketId'
+      .where(sq => {
+        const subQuery = qb
+          .subQuery()
+          .select('max( fecha )')
+          .from(Detestadoticket, 't2')
+          .where('t1.ticketId = t2.ticketId')
+          .getQuery();
+        return 't1.fecha = ' + subQuery;
+      })
+      .andWhere(' t1.fecha between :fec1 and :fec2 ', {
+        fec1: `${formatFechaCorta()} ` + '00:00:00',
+        fec2: `${fecha2} ` + '00:00:00',
+      })
       .getMany();
     return detTickets;
   }

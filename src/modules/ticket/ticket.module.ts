@@ -20,6 +20,9 @@ import { Detestadoventanilla } from '../ventanilla/detestadoventanilla/detestado
 import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
 import { Usuario } from '../usuario/usuario.entity';
 
+/**
+ * Modulo de Ticket
+ */
 @Module({
   imports: [
     TypeOrmModule.forFeature([

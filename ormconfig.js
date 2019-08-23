@@ -1,18 +1,20 @@
-const dotenv = require( "dotenv" );
-const fs = require( "fs" );
+const dotenv = require('dotenv');
 const environment = process.env.NODE_ENV;
-const data = dotenv.parse( fs.readFileSync(`${environment}.env`) );
+
+dotenv.config({
+  path: `${environment}.env`,
+});
 
 module.exports = {
-  "host": data.TYPEORM_HOST,
-  "name": data.TYPEORM_NAME,
-  "type": data.TYPEORM_TYPE,
-  "username": data.TYPEORM_USERNAME,
-  "password": data.TYPEORM_PASSWORD,
-  "database": data.TYPEORM_DATABASE,
-  "synchronize": false,//Boolean( data.TYPEORM_SYNCHRONIZE ),
-  "logging": Boolean( data.TYPEORM_LOGGING ),
-  "entities": data.TYPEORM_ENTITIES.split( "," ),
+  host: process.env.TYPEORM_HOST,
+  name: process.env.TYPEORM_NAME,
+  type: process.env.TYPEORM_TYPE,
+  username: process.env.TYPEORM_USERNAME,
+  password: process.env.TYPEORM_PASSWORD,
+  database: process.env.TYPEORM_DATABASE,
+  synchronize: false, //Boolean( data.TYPEORM_SYNCHRONIZE ),
+  logging: Boolean(process.env.TYPEORM_LOGGING),
+  entities: process.env.TYPEORM_ENTITIES.split(','),
   /*"migrationsRun": true,
   "migrations": ["./src/migrations/!**!/!*.ts"],
   "cli": {

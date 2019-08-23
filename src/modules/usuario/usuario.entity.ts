@@ -1,7 +1,15 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  BeforeInsert,
+} from 'typeorm';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
+import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcryptjs';
 
-@Entity( 'tb_usuario')
+@Entity('tb_usuario')
 export class Usuario {
   @PrimaryGeneratedColumn()
   idusuario: number;
@@ -12,7 +20,7 @@ export class Usuario {
   @Column()
   password: string;
 
-  @Column( 'boolean', {
+  @Column('boolean', {
     default: true,
     name: 'estado',
     comment: 'Estado del usuario ( ACTIVO - INACTIVO )',
@@ -20,10 +28,39 @@ export class Usuario {
   })
   estado: boolean;
 
-  @Column()
+  @Column('int4', {
+    nullable: true,
+  })
   idpersonal: number;
 
-  @OneToMany( type => Ventanilla, ventanilla => ventanilla.id )
+  @OneToMany(type => Ventanilla, ventanilla => ventanilla.id)
   ventanillas: Ventanilla[];
 
+  @BeforeInsert()
+  async encriptarPassword() {
+    return (this.password = await bcrypt.hash(this.password, 10));
+  }
+
+  get token() {
+    const { idusuario, username } = this;
+    return jwt.sign(
+      {
+        idusuario,
+        username,
+      },
+      process.env.SECRET,
+      {
+        expiresIn: '1d',
+      },
+    );
+  }
+
+  toResponseObject(mostrarToken = false) {
+    const { idusuario, username, idpersonal } = this;
+    let responseObject: any = { idusuario, username, idpersonal };
+    if (mostrarToken) {
+      responseObject.token = this.token;
+    }
+    return responseObject;
+  }
 }

@@ -6,20 +6,25 @@ import { AppModule } from './app.module';
 import { swaggerBaseConfig } from './shared/configSwagger';
 import { cargarConfiguracion } from './shared/loadenv';
 import 'moment/locale/es-us';
+var lastmodified = require('lastmodified');
+
+// create a new lastmodified object, passing a base path to prepend to filenames
+var modified = lastmodified(__dirname);
+modified.setBasePath(__dirname);
 
 const data = cargarConfiguracion();
 const PORT = data.PORT;
 
 async function bootstrap() {
-  const app = await NestFactory.create( AppModule );
+  const app = await NestFactory.create(AppModule);
   const environment = process.env.NODE_ENV;
-  if ( environment === 'development' ) {
-    const document = SwaggerModule.createDocument( app, swaggerBaseConfig );
-    app.use('/api/docs/swagger.json', ( req, res ) => {
-      res.send( document );
+  if (environment === 'development') {
+    const document = SwaggerModule.createDocument(app, swaggerBaseConfig);
+    app.use('/api/docs/swagger.json', (req, res) => {
+      res.send(document);
     });
-    SwaggerModule.setup( '/docs', app, null, {
-      swaggerUrl: `http://localhost:${ PORT }/api/docs/swagger.json`,
+    SwaggerModule.setup('/docs', app, null, {
+      swaggerUrl: `http://localhost:${PORT}/api/docs/swagger.json`,
       explorer: true,
       swaggerOptions: {
         docExpansion: 'list',
@@ -28,9 +33,9 @@ async function bootstrap() {
       },
     });
   }
-  app.setGlobalPrefix( 'api' );
+  app.setGlobalPrefix('api');
   app.enableCors();
-  await app.listen( PORT, '0.0.0.0' );
-  Logger.log(`Server running on http://localhost:${ PORT }/api`, 'Bootstrap');
+  await app.listen(PORT, '0.0.0.0');
+  Logger.log(`Server running on http://localhost:${PORT}/api`, 'Bootstrap');
 }
 bootstrap();
