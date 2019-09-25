@@ -1,20 +1,26 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { TicketService } from './ticket.service';
 import { Ticket } from './ticket.entity';
 import { TicketDto, TicketRO } from './ticket.dto';
 import { ApiUseTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
+import { AuthGuard } from 'src/shared/guards/auth.guard';
 
 /**
  * Controlador del Modulo Ticket
  */
 @ApiUseTags('Ticket')
 @Controller('ticket')
+@UseGuards(new AuthGuard())
 export class TicketController {
-  constructor(
-    private ticketService: TicketService,
-  ) {
-
-  }
+  constructor(private ticketService: TicketService) {}
 
   /**
    * Controlador para llamar a servicio de listarTickets
@@ -22,9 +28,15 @@ export class TicketController {
    * @returns {(Ticket|Array)} Listas de Tickets
    */
   @ApiOperation({
-    title: 'Listar Tickets', description: 'Consulta para listar tickets de día actual',
+    title: 'Listar Tickets',
+    description: 'Consulta para listar tickets de día actual',
   })
-  @ApiResponse({ status: 200, description: 'Lista de Tickets', isArray: true, type: TicketRO })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de Tickets',
+    isArray: true,
+    type: TicketRO,
+  })
   @Get()
   async obtenerTickets() {
     return this.ticketService.getTickets();
@@ -37,25 +49,24 @@ export class TicketController {
    * @returns {Ticket} Ticket creado.
    */
   @ApiOperation({
-    title: 'Crear Ticket', description: 'Consulta para crear nuevo Ticket',
+    title: 'Crear Ticket',
+    description: 'Consulta para crear nuevo Ticket',
   })
   @ApiResponse({ status: 201, description: 'Crear Ticket', isArray: false })
   @Post()
-  async crearTicket(
-    @Body() ticket: TicketDto,
-  ) {
-    return this.ticketService.crearTicket( ticket );
+  async crearTicket(@Body() ticket: TicketDto) {
+    return this.ticketService.crearTicket(ticket);
   }
-  
 
-/**
- * Actualizar Ticket
- * @param {number} idticket id del ticket 
- * @param {number} idventanilla id de la ventanilla
- * @returns TicketRO
- */
+  /**
+   * Actualizar Ticket
+   * @param {number} idticket id del ticket
+   * @param {number} idventanilla id de la ventanilla
+   * @returns TicketRO
+   */
   @ApiOperation({
-    title: 'Asignar Ventanilla', description: 'Asignación de Ticket a Ventanilla',
+    title: 'Asignar Ventanilla',
+    description: 'Asignación de Ticket a Ventanilla',
   })
   @ApiResponse({ status: 200, description: '', isArray: false })
   @Put(':idticket/asignar/:idventanilla')
@@ -63,7 +74,7 @@ export class TicketController {
     @Param('idticket') idticket: number,
     @Param('idventanilla') idventanilla: number,
   ) {
-    return this.ticketService.asignarVentanilla( idticket, idventanilla );
+    return this.ticketService.asignarVentanilla(idticket, idventanilla);
   }
 
   /**
@@ -73,14 +84,17 @@ export class TicketController {
    * @returns {Ticket} Ticket actualizado.
    */
   @ApiOperation({
-    title: 'Asignar Urgente Ticket', description: 'Consulta para asignar urgencia a Ticket',
+    title: 'Asignar Urgente Ticket',
+    description: 'Consulta para asignar urgencia a Ticket',
   })
-  @ApiResponse({ status: 200, description: 'Asignar Urgente a Ticket', isArray: false })
-  @Put( ':id/urgente' )
-  async ticketUrgente(
-    @Param( 'id' ) idticket: number
-  ) {
-    return this.ticketService.ticketUrgente( idticket );
+  @ApiResponse({
+    status: 200,
+    description: 'Asignar Urgente a Ticket',
+    isArray: false,
+  })
+  @Put(':id/urgente')
+  async ticketUrgente(@Param('id') idticket: number) {
+    return this.ticketService.ticketUrgente(idticket);
   }
 
   /**
@@ -94,13 +108,17 @@ export class TicketController {
     title: 'Guardar Nuevo Estado para Ticket',
     description: 'Guardar nuevo estado en DetEstadoTicket',
   })
-  @ApiResponse({ status: 201, description: 'Guardar Nuevo Estado a Ticket', isArray: false })
-  @Post( ':idticket/estado/:idestado' )
+  @ApiResponse({
+    status: 201,
+    description: 'Guardar Nuevo Estado a Ticket',
+    isArray: false,
+  })
+  @Post(':idticket/estado/:idestado')
   guardarNuevoEstado(
-    @Param( 'idticket' ) idticket: number,
-    @Param( 'idestado' ) idestado: number,
+    @Param('idticket') idticket: number,
+    @Param('idestado') idestado: number,
   ) {
-    return this.ticketService.guardarNuevoEstado( idticket, idestado );
+    return this.ticketService.guardarNuevoEstado(idticket, idestado);
   }
 
   /**
@@ -115,12 +133,12 @@ export class TicketController {
     description: 'Derivar ticket a Otra Ventanilla',
   })
   @ApiResponse({ status: 200, description: 'Derivar Ticket', isArray: true })
-  @Post( ':idticket/derivar/:idventanilla' )
+  @Post(':idticket/derivar/:idventanilla')
   derivarOtraVentanilla(
-    @Param( 'idticket' ) idticket: number,
-    @Param( 'idventanilla' ) idventanilla: number,
+    @Param('idticket') idticket: number,
+    @Param('idventanilla') idventanilla: number,
   ) {
-    return this.ticketService.derivarOtraVentanilla( idticket, idventanilla );
+    return this.ticketService.derivarOtraVentanilla(idticket, idventanilla);
   }
 
   /**
@@ -134,13 +152,19 @@ export class TicketController {
     title: 'Tramite a Ticket',
     description: 'Guardar tramite en Ticket',
   })
-  @ApiResponse({ status: 200, description: 'Actualizar temática o trámite a Ticket', isArray: false })
+  @ApiResponse({
+    status: 200,
+    description: 'Actualizar temática o trámite a Ticket',
+    isArray: false,
+  })
   @Put(':idticket/tematica/tramite')
   guardarTramiteEnTicket(
-    @Param( 'idticket' ) idticket: number,
+    @Param('idticket') idticket: number,
     @Body() actualizarTematicaTramite: any,
   ) {
-    return this.ticketService.actualizarTematicaOrTramite( idticket, actualizarTematicaTramite );
+    return this.ticketService.actualizarTematicaOrTramite(
+      idticket,
+      actualizarTematicaTramite,
+    );
   }
-
 }

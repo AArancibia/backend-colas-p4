@@ -21,12 +21,12 @@ export class UsuarioService {
         username: Like(`%${nombreUsuario}%`),
       },
     });
-    return usuarios;
+    return usuarios.map(usuario => usuario.toResponseObject(false));
   }
 
   async obtenerUsuarios(): Promise<UsuarioRO[]> {
     const usuarios = await this.usuarioRepository.find();
-    return usuarios;
+    return usuarios.map(usuario => usuario.toResponseObject(false));
   }
 
   async registrar(auth: UsuarioDTO): Promise<UsuarioRO> {
