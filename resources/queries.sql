@@ -61,7 +61,7 @@ AS
 			t1."fecha"
 		FROM tb_ventanilla
 			left outer JOIN (
-					select DISTINCT ON ("tbVentanillaId")  * from tb_ventanilla_estados_tb_estadoventanilla
+					select DISTINCT ON ("tbVentanillaId")   * from tb_ventanilla_estados_tb_estadoventanilla
 	where fecha
 						BETWEEN CURRENT_DATE and CURRENT_DATE + INTERVAL
 '1 day'
@@ -87,7 +87,7 @@ from ticket_estados_estadoticket t1
 where t1.fecha = ( select max( fecha )
 	from ticket_estados_estadoticket  t2
 	where t1."ticketId" = t2."ticketId" ) and
-	t1."estadoticketId" in ( 2, 3)
+	t1."estadoticketId" in ( 2, 3 )
 	AND t1."fecha" BETWEEN CURRENT_DATE and CURRENT_DATE + INTERVAL
 '1 day'
 									 ) as R1
