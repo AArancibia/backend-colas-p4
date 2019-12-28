@@ -65,7 +65,7 @@ export class Ticket {
   estados: Estado[];
 
   /* PARA PODER OBTERNER LOS DETESTADOS DEL TICKET */
-  @OneToMany(type => Detestadoticket, det => det.ticket, { cascade: true })
+  @OneToMany(type => Detestadoticket, det => det.ticketId, { cascade: true })
   detEstados: Detestadoticket[];
 
   @ManyToOne(type => Ventanilla, ventanilla => ventanilla.id)

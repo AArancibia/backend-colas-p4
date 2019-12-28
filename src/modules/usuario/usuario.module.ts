@@ -8,7 +8,8 @@ import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { VentanillaModule } from '../ventanilla/ventanilla.module';
 import { Estadoventanilla } from '../ventanilla/estadoventanilla/estadoventanilla.entity';
 import { Detestadoventanilla } from '../ventanilla/detestadoventanilla/detestadoventanilla.entity';
-import { VentanillaGateway } from 'src/gateways/ventanilla.gateway';
+import { VentanillaGateway } from '../../gateways/ventanilla.gateway';
+
 
 @Module({
   imports: [

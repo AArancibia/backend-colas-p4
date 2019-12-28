@@ -1,9 +1,8 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Ventanilla } from '../ventanilla.entity';
 
-@Entity( 'tb_estadoventanilla' )
+@Entity('tb_estadoventanilla')
 export class Estadoventanilla {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -12,7 +11,6 @@ export class Estadoventanilla {
   })
   descripcion: string;
 
-  @ManyToMany( type => Ventanilla )
+  @ManyToMany(type => Ventanilla)
   ventanillas: Ventanilla[];
-
 }

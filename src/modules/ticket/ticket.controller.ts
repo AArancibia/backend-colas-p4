@@ -11,7 +11,7 @@ import { TicketService } from './ticket.service';
 import { Ticket } from './ticket.entity';
 import { TicketDto, TicketRO } from './ticket.dto';
 import { ApiUseTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
-import { AuthGuard } from 'src/shared/guards/auth.guard';
+import { AuthGuard } from '../../shared/guards/auth.guard';
 
 /**
  * Controlador del Modulo Ticket

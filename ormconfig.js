@@ -12,7 +12,7 @@ module.exports = {
   username: process.env.TYPEORM_USERNAME,
   password: process.env.TYPEORM_PASSWORD,
   database: process.env.TYPEORM_DATABASE,
-  synchronize: false, //Boolean( data.TYPEORM_SYNCHRONIZE ),
+  synchronize: true, //Boolean( data.TYPEORM_SYNCHRONIZE ),
   logging: Boolean(process.env.TYPEORM_LOGGING),
   entities: process.env.TYPEORM_ENTITIES.split(','),
   /*"migrationsRun": true,
