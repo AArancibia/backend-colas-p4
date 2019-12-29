@@ -1,19 +1,24 @@
-import 'dotenv/config';
+//import 'dotenv/config';
+
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
 import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { swaggerBaseConfig } from './shared/configSwagger';
-import { cargarConfiguracion } from './shared/loadenv';
+//import { cargarConfiguracion } from './shared/loadenv';
 import 'moment/locale/es-us';
 var lastmodified = require('lastmodified');
 
 // create a new lastmodified object, passing a base path to prepend to filenames
 var modified = lastmodified(__dirname);
 modified.setBasePath(__dirname);
+const dotenv = require('dotenv');
+const environment = process.env.NODE_ENV;
+dotenv.config({
+  path: `${environment}.env`,
+});
 
-const data = cargarConfiguracion();
-const PORT = data.PORT;
+const PORT = process.env.PORT;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
