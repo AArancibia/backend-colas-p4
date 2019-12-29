@@ -18,6 +18,8 @@ dotenv.config({
   path: `${environment}.env`,
 });
 
+Logger.log(process.env.TYPEORM_NAME, process.env.TYPEORM_USERNAME);
+
 const PORT = process.env.PORT;
 
 async function bootstrap() {
