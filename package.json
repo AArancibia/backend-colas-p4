@@ -15,7 +15,6 @@
     "start:dev": "set NODE_ENV=development&& nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
     "build-prod": "rimraf dist && npm run build && set NODE_ENV=production&& node dist/main.js",
-    "prestart:prod": "npm i",
     "start:prod": "set NODE_ENV=production&& node dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
