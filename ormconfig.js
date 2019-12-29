@@ -5,6 +5,8 @@ dotenv.config({
   path: `${environment}.env`,
 });
 
+console.log(process.env.TYPEORM_NAME, process.env.TYPEORM_ENTITIES);
+
 module.exports = {
   host: process.env.TYPEORM_HOST,
   name: process.env.TYPEORM_NAME,
