@@ -5,6 +5,7 @@ import { Logger } from '@nestjs/common';
 import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { swaggerBaseConfig } from './shared/configSwagger';
+
 //import { cargarConfiguracion } from './shared/loadenv';
 import 'moment/locale/es-us';
 var lastmodified = require('lastmodified');
@@ -13,6 +14,7 @@ var lastmodified = require('lastmodified');
 var modified = lastmodified(__dirname);
 modified.setBasePath(__dirname);
 const dotenv = require('dotenv');
+const enforce = require('express-sslify');
 const environment = process.env.NODE_ENV;
 dotenv.config({
   path: `${environment}.env`,
@@ -40,6 +42,7 @@ async function bootstrap() {
       },
     });
   }
+  app.use(enforce.HTTPS({ trustProtoHeader: true }));
   app.setGlobalPrefix('api');
   app.enableCors();
   await app.listen(PORT, '0.0.0.0');
