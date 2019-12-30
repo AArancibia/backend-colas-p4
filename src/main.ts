@@ -42,7 +42,7 @@ async function bootstrap() {
       },
     });
   }
-  app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  app.use(enforce.HTTPS());
   app.setGlobalPrefix('api');
   app.enableCors();
   await app.listen(PORT, '0.0.0.0');
