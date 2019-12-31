@@ -18,7 +18,7 @@ import { AuthGuard } from '../../shared/guards/auth.guard';
  */
 @ApiUseTags('Ticket')
 @Controller('ticket')
-@UseGuards(new AuthGuard())
+//@UseGuards(new AuthGuard())
 export class TicketController {
   constructor(private ticketService: TicketService) {}
 
