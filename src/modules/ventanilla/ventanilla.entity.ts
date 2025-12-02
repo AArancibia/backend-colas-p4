@@ -2,18 +2,14 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
-  RelationId,
-  Table,
 } from 'typeorm';
 import { Usuario } from '../usuario/usuario.entity';
 import { Estadoventanilla } from './estadoventanilla/estadoventanilla.entity';
 import { Ticket } from '../ticket/ticket.entity';
+import { Detestadoventanilla } from './detestadoventanilla/detestadoventanilla.entity';
 
 @Entity('tb_ventanilla')
 export class Ventanilla {
@@ -42,9 +38,6 @@ export class Ventanilla {
   @OneToMany(type => Ticket, ticket => ticket.ventanilla) /*, { eager: true } */
   tickets: Ticket;
 
-  /*@RelationId( ( ventanilla: Ventanilla ) => ventanilla.tickets )
-  estadosTicket: number[];*/
-
   @ManyToOne(type => Usuario, usuario => usuario.ventanillas)
   @JoinColumn({ name: 'idusuario' })
   usuario: Usuario;
@@ -54,7 +47,6 @@ export class Ventanilla {
   })
   idusuario: number;
 
-  @ManyToMany(type => Estadoventanilla)
-  @JoinTable()
+  @OneToMany(type => Detestadoventanilla, detestadoventanilla => detestadoventanilla.ventanilla)
   estados: Estadoventanilla[];
 }

@@ -7,4 +7,6 @@ export class VentanillaDTO {
   ubicacion: string;
   @ApiModelProperty()
   idusuario: number;
+  @ApiModelProperty()
+  tipoatencion: string;
 }

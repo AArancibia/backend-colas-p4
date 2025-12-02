@@ -87,7 +87,6 @@ export class VentanillaGateway {
         preferencial,
         tbVentanillaId,
         tbEstadoventanillaId,
-        identificador,
         fecha,
         id,
         codigoventanilla,
@@ -119,7 +118,6 @@ export class VentanillaGateway {
         detestado: {
           tbVentanillaId,
           tbEstadoventanillaId,
-          identificador,
           fecha,
         },
       };

@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Ventanilla } from '../ventanilla.entity';
+import { Detestadoventanilla } from '../detestadoventanilla/detestadoventanilla.entity';
 
 @Entity('tb_estadoventanilla')
 export class Estadoventanilla {
@@ -11,6 +12,6 @@ export class Estadoventanilla {
   })
   descripcion: string;
 
-  @ManyToMany(type => Ventanilla)
+  @OneToMany(() => Detestadoventanilla, detestadoventanilla => detestadoventanilla.estado)
   ventanillas: Ventanilla[];
 }

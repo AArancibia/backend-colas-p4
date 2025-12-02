@@ -60,7 +60,6 @@ AS
 			tb_ventanilla.tipoatencion,
 			t1."tbVentanillaId",
 			t1."tbEstadoventanillaId",
-			t1."identificador",
 			t1."fecha"
 		FROM tb_ventanilla
 			left outer JOIN (
@@ -105,7 +104,6 @@ AS
 	SELECT
 		"t1"."estadoticketId",
 		"t1"."ticketId",
-		"t1"."identificador",
 		"t1"."fecha" as detallefecha,
 		"ticket".*,
 		"tb_administrado"."id" as administradoid,
