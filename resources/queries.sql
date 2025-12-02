@@ -40,7 +40,10 @@ VALUES
 	('V-2', 'T', 'Palacio Municipal', 2),
 	('V-3', 'T', 'Palacio Municipal', 3);
 
-
+INSERT INTO tb_administrado
+	( nrodoc, nombre, apepat,apemat,idcontribuyente )
+VALUES
+	( '82875266', 'Alexis', 'Arancibia', 'Sanchez', null);
 
 /*
     CONSULTA PARA OBTENER ULTIMO ESTADO DE VENTANILLA JUNTO CON EL TICKET QUE ESTA ATENDIENDO
@@ -92,7 +95,7 @@ where t1.fecha = ( select max( fecha )
 '1 day'
 									 ) as R1
 					on R1.idventanilla = R2."tbVentanillaId"
-					order by R2.codigoventanilla
+					order by R2.codigoventanilla;
 
 /*
     VISTA ULTIMOSESTADOTICKET CON ADMINISTRADO
@@ -122,4 +125,4 @@ AS
 										"t2"
 		WHERE "t1"."ticketId" = "t2"."ticketId")
 		AND "t1"."fecha" between CURRENT_DATE and CURRENT_DATE + INTERVAL
-'1 day'
+'1 day';

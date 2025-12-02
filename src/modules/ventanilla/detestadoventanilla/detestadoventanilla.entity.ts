@@ -15,7 +15,10 @@ import { Expose } from 'class-transformer';
 
 @Entity({ name: 'tb_ventanilla_estados_tb_estadoventanilla' })
 export class Detestadoventanilla {
-  @ManyToOne(type => Ventanilla, ventanilla => ventanilla.estados)
+  @ManyToOne(
+    type => Ventanilla,
+      ventanilla => ventanilla.estados,
+  )
   @JoinColumn({ name: 'tbVentanillaId' })
   ventanilla: Ventanilla;
 
