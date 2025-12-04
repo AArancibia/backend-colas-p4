@@ -73,7 +73,10 @@
     "tslint": "5.12.1",
     "typescript": "^3.2.4"
   },
-  "engines": { "node": "12.15.0", "npm": "6.13.4" },
+  "engines": {
+    "node": "12.15.0",
+    "npm": "6.13.4"
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",
