@@ -45,6 +45,11 @@ INSERT INTO tb_administrado
 VALUES
 	( '82875266', 'Alexis', 'Arancibia', 'Sanchez', null);
 
+INSERT INTO tematica
+    ( nombre )
+VALUES
+    ('Tematica 1'), ('Tematica 2'), ('Tematica 3');
+
 /*
     CONSULTA PARA OBTENER ULTIMO ESTADO DE VENTANILLA JUNTO CON EL TICKET QUE ESTA ATENDIENDO
 */

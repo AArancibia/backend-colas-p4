@@ -9,6 +9,7 @@ import { AdministradoModule } from './modules/administrado/administrado.module';
 import { SistradocModule } from './modules/sistradoc/sistradoc.module';
 import { ContribuyenteModule } from './modules/rentas/contribuyente/contribuyente.module';
 import { SocketGateway } from './gateways/socket.gateway';
+import { TematicaModule } from './modules/tematica/tematica.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SocketGateway } from './gateways/socket.gateway';
     AdministradoModule,
     SistradocModule,
     ContribuyenteModule,
+    TematicaModule,
     SocketGateway,
   ],
   controllers: [AppController],
