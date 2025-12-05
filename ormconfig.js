@@ -16,7 +16,7 @@ module.exports = {
   database: process.env.TYPEORM_DATABASE,
   synchronize: Boolean(process.env.TYPEORM_SYNCHRONIZE),
   logging: Boolean(process.env.TYPEORM_LOGGING),
-  // ssl: Boolean(process.env.TYPEORM_SSL),
+  ssl: Boolean(process.env.TYPEORM_SSL),
   entities: process.env.TYPEORM_ENTITIES.split(','),
   /*"migrationsRun": true,
   "migrations": ["./src/migrations/!**!/!*.ts"],
