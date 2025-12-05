@@ -1,6 +1,6 @@
 {
   "name": "backend-colas",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "author": "",
   "license": "MIT",
@@ -48,7 +48,8 @@
     "rxjs": "^6.3.3",
     "swagger-ui-express": "^4.0.6",
     "threads": "^0.12.1",
-    "typeorm": "^0.2.18"
+    "typeorm": "^0.2.18",
+    "lastmodified": "0.0.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.2.8",
@@ -62,7 +63,6 @@
     "@types/supertest": "^2.0.7",
     "@types/websocket": "0.0.40",
     "jest": "^23.6.0",
-    "lastmodified": "0.0.2",
     "nodemon": "^1.18.9",
     "prettier": "^1.15.3",
     "supertest": "^3.4.1",
