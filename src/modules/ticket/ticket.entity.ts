@@ -60,9 +60,9 @@ export class Ticket {
   @Column('date')
   fechacorta: Date | string;
 
-  @ManyToMany(type => Estado, { cascade: true })
+  /*@ManyToMany(type => Estado, { cascade: true })
   @JoinTable()
-  estados: Estado[];
+  estados: Estado[];*/
 
   /* PARA PODER OBTERNER LOS DETESTADOS DEL TICKET */
   @OneToMany(type => Detestadoticket, det => det.ticket, { cascade: true })
@@ -95,8 +95,8 @@ export class Ticket {
   })
   idadministrado: number;
 
-  @RelationId((tickets: Ticket) => tickets.estados)
-  estadosIds: number[];
+  /*@RelationId((tickets: Ticket) => tickets.estados)
+  estadosIds: number[];*/
 
   @BeforeInsert()
   asignarFecha() {

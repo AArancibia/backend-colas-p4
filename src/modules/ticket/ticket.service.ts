@@ -77,7 +77,7 @@ export class TicketService {
    */
   async getTickets() {
     const tickets = await this.ticketRepository.find({
-      relations: [ 'administrado', 'detEstados', 'estados' ],
+      relations: [ 'administrado', 'detEstados' ],
       where: {
         fechacorta: formatFechaCorta(),
       },
@@ -87,7 +87,7 @@ export class TicketService {
     tickets.map(
       ticket => {
         ticket.detEstados.sort( ( a, b ) => new Date( b.fecha ).getTime() - new Date( a.fecha).getTime() );
-        const ultimoEstado = ticket.detEstados[ 0 ].estadoticketId;
+        const ultimoEstado = ticket.detEstados[ 0 ]?.estadoticketId || -1;
         if ( ultimoEstado === 4 || ultimoEstado === 6 ) {
           return;
         }
@@ -105,26 +105,25 @@ export class TicketService {
    */
   async crearTicket( ticket: TicketDto ) {
     const { idtipoticket, preferencial, idadministrado, urgente } = ticket;
-    const estado = await this.estadoRepository.findOne( { where: { idestado: 1 } });
+    const estado = await this.estadoRepository.findOne( { where: { id: 1 } });
     const administrado = await this.administradoRepository.findOne({ where: { id: idadministrado }});
     const nuevoTicket: Ticket = await this.ticketRepository.create({
       ...ticket,
       administrado,
       preferencial,
     });
-    nuevoTicket.estados = [ estado ];
+    const detEstadoTicket = new Detestadoticket();
+    detEstadoTicket.ticket = nuevoTicket;
+    detEstadoTicket.estado = estado;
+    nuevoTicket.detEstados = [detEstadoTicket];
     const abrTicket = await this.obtenerTipoTicket( idtipoticket );
     const correlativo = await this.obtenerCorrelativo( idtipoticket, formatFechaCorta() );
     nuevoTicket.correlativo = correlativo;
     nuevoTicket.codigo = `${ urgente ? 'U' : '' }${ preferencial ? 'P' : '' }${ abrTicket }-${ correlativo }`;
     await this.ticketRepository.save( nuevoTicket );
-    await this.detEstadoTicketRepository.update({
-      ticketId:  nuevoTicket.id,
-      estadoticketId: 1,
-    }, { fecha: formatFechaLarga() });
     const ticketBD = await this.ticketRepository.findOne({
       where: { id: nuevoTicket.id },
-      relations: ['administrado', 'detEstados', 'estados', 'tipoTicket' ],
+      relations: ['administrado', 'detEstados', 'tipoTicket' ], // Todo 'estados',
     });
     this.wsTicket.ws.emit( '[TICKET] Nuevo', ticketBD );
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
@@ -179,7 +178,7 @@ export class TicketService {
       .execute();
     const ticketActualizado = await this.ticketRepository.findOne({
       where: { id: idticket },
-      relations: [ 'estados', 'administrado', 'detEstados' ],
+      relations: ['administrado', 'detEstados'],
     });
     this.wsTicket.ws.emit( '[TICKET] NUEVO ESTADO', ticketActualizado );
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
@@ -202,18 +201,21 @@ export class TicketService {
   ) {
     const ticket = await this.ticketRepository.findOne( {
       where: { id: idticket },
-      relations: [ 'estados', 'administrado' ],
+      relations: [ 'detEstados', 'administrado' ],
     });
     if ( !ticket ) throw new HttpException( `No existe el ticket con el id: ${ idticket }`, HttpStatus.NOT_FOUND );
 
-    const ventanilla = await this.ventanillaRepository.findOne({ where: { idventanilla }});
+    const ventanilla = await this.ventanillaRepository.findOne({ where: { id: idventanilla }});
     if ( !ventanilla ) throw new HttpException( `No existe la ventanilla con el id: ${ idventanilla }`, HttpStatus.NOT_FOUND );
 
     const llamandoEstado = await this.estadoRepository.findOne({ where: { id: 2 }});
 
-    ticket.estados = [ ...ticket.estados, llamandoEstado ];
+    const detEstadoTicket = new Detestadoticket();
+    detEstadoTicket.ticketId = ticket.id;
+    detEstadoTicket.estadoticketId = llamandoEstado.id;
+    ticket.detEstados = [...ticket.detEstados, detEstadoTicket];
 
-    const actualizarTicket: Ticket = await this.ticketRepository.create({
+    const actualizarTicket: Ticket = this.ticketRepository.create({
       ...ticket,
       idventanilla,
     });
@@ -314,7 +316,7 @@ export class TicketService {
     this.wsTicket.ws.emit( '[TICKET] DETESTADO', ticketAEmitir );
     ticket = await this.ticketRepository.findOne({
       where: { id: idticket },
-      relations: ['administrado', 'detEstados', 'estados'],
+      relations: ['administrado', 'detEstados'],
     });
     this.wsTicket.ws.emit('[TICKET] URGENTE', ticket );
     return ticketActualizado;

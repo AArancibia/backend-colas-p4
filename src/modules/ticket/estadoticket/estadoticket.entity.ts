@@ -26,9 +26,9 @@ export class Estado {
   })
   abr: string;
 
-  @ManyToMany(type => Ticket)
-  tickets: Ticket[];
+  /*@ManyToMany(type => Ticket)
+  tickets: Ticket[];*/
 
-  // @OneToMany(type => Detestadoticket, detestado => detestado.estadoticketId)
-  // detestadoticket: Detestadoticket[];
+  @OneToMany(type => Detestadoticket, detestado => detestado.estado)
+  detestadoticket: Detestadoticket[];
 }

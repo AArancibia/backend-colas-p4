@@ -29,23 +29,10 @@ export class TicketGateway {
     private detestadoRepository: Repository<Detestadoticket>,
   ) {}
 
-  private toReponseObject(ticket: Ticket) {
-    for (let i = 0; i <= ticket.estadosIds.length; i++) {
-      const estado = ticket.estadosIds[i];
-      this.logger.log(estado);
-      if (estado == 4) {
-        this.logger.log('hay 4');
-        return;
-      }
-    }
-    return ticket;
-  }
-
   @SubscribeMessage('[TICKET] Lista')
   async listarTickets(client, data): Promise<any> {
-    //WsResponse< TicketRO >
     const tickets = await this.ticketRepository.find({
-      relations: ['estados', 'administrado', 'detEstados', 'tipoTicket'],
+      relations: ['administrado', 'detEstados', 'tipoTicket'],
       where: {
         fechacorta: formatFechaCorta(),
       },
@@ -56,7 +43,7 @@ export class TicketGateway {
       ticket.detEstados.sort(
         (a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime(),
       );
-      const ultimoEstado = ticket.detEstados[0].estadoticketId;
+      const ultimoEstado = ticket.detEstados[0]?.estadoticketId || -1;
       if (ultimoEstado === 4 || ultimoEstado === 6) {
         return;
       }
