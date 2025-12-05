@@ -22,4 +22,3 @@ jobs:
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           procfile: "web: npm run start:prod"
-          branch: "develop"
