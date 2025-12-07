@@ -15,9 +15,8 @@ import { Detestadoticket } from '../modules/ticket/detestadoticket/detestadotick
 import * as momenttz from 'moment-timezone';
 import * as moment from 'moment';
 
-@WebSocketGateway(8081, {
+@WebSocketGateway(0, {
   namespace: 'ticket',
-  //transports: ['websocket'],
 })
 export class TicketGateway {
   logger = new Logger('WebSocketsTicket');

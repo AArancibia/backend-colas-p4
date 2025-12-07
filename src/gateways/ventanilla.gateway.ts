@@ -10,7 +10,7 @@ import { Ventanilla } from '../modules/ventanilla/ventanilla.entity';
 import { Logger } from '@nestjs/common';
 import { Usuario } from '../modules/usuario/usuario.entity';
 
-@WebSocketGateway(8081, {
+@WebSocketGateway(0, {
   namespace: 'ventanilla',
 })
 export class VentanillaGateway {

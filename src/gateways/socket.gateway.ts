@@ -5,9 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 
-@WebSocketGateway(8081, {
-  //transports: ['websocket'],
-})
+@WebSocketGateway(0, {})
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   logger = new Logger('WebSocketsGateway');
   constructor() {}
