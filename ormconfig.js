@@ -9,6 +9,7 @@ console.log(process.env.TYPEORM_NAME, process.env.TYPEORM_ENTITIES);
 
 module.exports = {
   host: process.env.TYPEORM_HOST,
+  port: process.env.TYPEORM_PORT,
   name: process.env.TYPEORM_NAME,
   type: process.env.TYPEORM_TYPE,
   username: process.env.TYPEORM_USERNAME,
@@ -17,11 +18,5 @@ module.exports = {
   synchronize: Boolean(process.env.TYPEORM_SYNCHRONIZE),
   logging: Boolean(process.env.TYPEORM_LOGGING),
   ssl: process.env.TYPEORM_SSL === "true",
-  entities: process.env.TYPEORM_ENTITIES.split(','),
-  /*"migrationsRun": true,
-  "migrations": ["./src/migrations/!**!/!*.ts"],
-  "cli": {
-    "entitiesDir": "./src/!**!/!*.entity.ts",
-    "migrationsDir": "./src/migrations",
-  },*/
+  entities: process.env.TYPEORM_ENTITIES.split(',')
 };
