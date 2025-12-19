@@ -5,8 +5,6 @@ dotenv.config({
   path: `${environment}.env`,
 });
 
-console.log(process.env.TYPEORM_NAME, process.env.TYPEORM_ENTITIES);
-
 module.exports = {
   host: process.env.TYPEORM_HOST,
   port: process.env.TYPEORM_PORT,
@@ -17,6 +15,8 @@ module.exports = {
   database: process.env.TYPEORM_DATABASE,
   synchronize: Boolean(process.env.TYPEORM_SYNCHRONIZE),
   logging: Boolean(process.env.TYPEORM_LOGGING),
-  ssl: process.env.TYPEORM_SSL === "true",
-  entities: process.env.TYPEORM_ENTITIES.split(',')
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  entities: process.env.TYPEORM_ENTITIES.split(','),
 };
