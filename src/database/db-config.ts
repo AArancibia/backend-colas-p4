@@ -15,6 +15,8 @@ export const dbOptions: TypeOrmModuleOptions = {
   database: process.env.TYPEORM_DATABASE,
   synchronize: Boolean(process.env.TYPEORM_SYNCHRONIZE),
   logging: Boolean(process.env.TYPEORM_LOGGING),
-  ssl: false,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   autoLoadEntities: true,
 };
