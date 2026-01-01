@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { DetestadoticketService } from './detestadoticket.service';
-import { ApiUseTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-@ApiUseTags('DetEstadoTicket')
+@ApiTags('DetEstadoTicket')
 @Controller('detestadoticket')
 export class DetestadoticketController {
   constructor(
@@ -10,7 +10,7 @@ export class DetestadoticketController {
   ) {}
 
   @ApiOperation({
-    title: 'Obtener Detalle de Estados de Ticket',
+    summary: 'Obtener Detalle de Estados de Ticket',
     description: 'Los estados que tiene cada Ticket',
   })
   @ApiResponse({ status: 200, description: 'Lista de ticket con sus estado', isArray: true })

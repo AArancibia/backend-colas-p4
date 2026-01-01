@@ -256,7 +256,7 @@ export class TicketService {
 
     const ventanillaAntigua = ticket.idventanilla;
 
-    const ventanilla = await this.ventanillaRepository.findOne({ where: { idventanilla }});
+    const ventanilla = await this.ventanillaRepository.findOne({ where: { id: idventanilla }}); // Changed
     if ( !ventanilla ) throw new HttpException( `No existe la ventanilla con el id: ${ idventanilla }`, HttpStatus.NOT_FOUND );
 
     const estadosTickets = await this.detEstadoTicketRepository.find( { where: { ticketId: idticket }});

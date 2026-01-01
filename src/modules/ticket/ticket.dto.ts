@@ -1,5 +1,5 @@
 import { IsBoolean, IsEmpty, IsNotEmpty, IsNotIn, IsNumber } from 'class-validator';
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Administrado } from '../administrado/administrado.entity';
 import { AdministradoRO } from '../administrado/administrado.dto';
 
@@ -12,7 +12,7 @@ export class TicketDto {
   /**
    * Id del Administrado
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @IsNotEmpty({
     message: 'Valor no debe ser nulo',
   })
@@ -21,7 +21,7 @@ export class TicketDto {
   /**
    * Id de la Tematica
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @IsNotEmpty({
     message: 'Valor no debe ser nulo',
   })
@@ -35,7 +35,7 @@ export class TicketDto {
   /**
    * Id del Tipo de Ticket
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @IsNotEmpty({
     message: 'Valor no debe ser nulo',
   })
@@ -49,7 +49,7 @@ export class TicketDto {
   /**
    * Campo preferencial
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @IsNotEmpty()
   @IsBoolean({
     message: 'El valor tiene que ser verdadero o falso',
@@ -59,7 +59,7 @@ export class TicketDto {
   /**
    * Campo urgente 
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @IsBoolean({
     message: 'El valor tiene que ser verdadero o falso',
   })
@@ -68,7 +68,7 @@ export class TicketDto {
   /**
    * Id del Tramite
    */
-  @ApiModelProperty()
+  @ApiProperty()
   idtramite?: number;
 
 }
@@ -81,34 +81,34 @@ export class TicketRO {
   /**
    * Id del Ticket
    */
-  @ApiModelProperty()
+  @ApiProperty()
   idticket: number;
   /**
    * Codigo del Ticket
    */
-  @ApiModelProperty()
+  @ApiProperty()
   codigo: string;
   /**
    * Fecha de creacion del Ticket
    */
-  @ApiModelProperty()
+  @ApiProperty()
   fecha: string;
   /**
    * Id del Administrado
    */
-  @ApiModelProperty()
+  @ApiProperty()
   idadministrado: number;
   /**
    * Id del Tipo de Ticket
    */
-  @ApiModelProperty()
+  @ApiProperty()
   idtipoticket: number;
   /**
    * Id del Tipo de Tematica
    */
-  @ApiModelProperty()
+  @ApiProperty()
   idtematica: number;
-  @ApiModelProperty()
+  @ApiProperty()
   /**
    * Id del Tramite
    */
@@ -116,21 +116,21 @@ export class TicketRO {
   /**
    * Campo preferencial
    */
-  @ApiModelProperty()
+  @ApiProperty()
   preferencial: boolean;
   /**
    * Campo urgente
    */
-  @ApiModelProperty()
+  @ApiProperty()
   urgente: boolean;
   /**
    * Id de la Ventanilla
    */
-  @ApiModelProperty()
+  @ApiProperty()
   idventanilla: number;
   /**
    * Datos del Administrado
    */
-  @ApiModelProperty()
+  @ApiProperty()
   administrado: AdministradoRO;
 }

@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { VentanillaService } from './ventanilla.service';
 import { VentanillaDTO } from './ventanilla.dto';
-import { ApiUseTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-@ApiUseTags('Ventanilla')
+@ApiTags('Ventanilla')
 @Controller('ventanilla')
 export class VentanillaController {
   constructor(
@@ -12,7 +12,7 @@ export class VentanillaController {
   }
 
   @ApiOperation({
-    title: 'Listar Ventanilla',
+    summary: 'Listar Ventanilla',
     description: 'Servicion para listar todas las ventanillas',
   })
   @ApiResponse({ status: 200, description: 'Nueva Ventanilla creada', isArray: false })
@@ -22,7 +22,7 @@ export class VentanillaController {
   }
 
   @ApiOperation({
-    title: 'Obtener Ventanilla por IdUsuario',
+    summary: 'Obtener Ventanilla por IdUsuario',
     description: 'Servicio para obtener ventanilla por IdUsuario',
   })
   @ApiResponse({ status: 200, description: 'Ventanilla por IdUsuario', isArray: false })
@@ -34,7 +34,7 @@ export class VentanillaController {
   }
 
   @ApiOperation({
-    title: 'Ultimo Estado de Ventanilla',
+    summary: 'Ultimo Estado de Ventanilla',
     description: 'Servicion para obtener los estados de una Ventanilla',
   })
   @ApiResponse({ status: 200, description: 'Filtro de Ventanilla', isArray: false })
@@ -46,7 +46,7 @@ export class VentanillaController {
   }
 
   @ApiOperation({
-    title: 'Ultimo Estado de Ventanillas',
+    summary: 'Ultimo Estado de Ventanillas',
     description: 'Servicion para listar los estados de las Ventanillas',
   })
   @ApiResponse({ status: 200, description: 'Listado de Estados de Ventanillas', isArray: true })
@@ -58,7 +58,7 @@ export class VentanillaController {
   }
 
   @ApiOperation({
-    title: 'Ultimo Estado de Ventanillas',
+    summary: 'Ultimo Estado de Ventanillas',
     description: 'Servicion para listar los estados de las Ventanillas',
   })
   @ApiResponse({ status: 200, description: 'Listado de Estados de Ventanillas', isArray: true })
@@ -68,7 +68,7 @@ export class VentanillaController {
   }
 
   @ApiOperation({
-    title: 'Asignar Usuario a Ventanilla',
+    summary: 'Asignar Usuario a Ventanilla',
     description: 'Servicion para asignar un usuario a Ventanilla',
   })
   @ApiResponse({ status: 200, description: 'Usuario asignado a Ventanilla', isArray: false })
@@ -81,7 +81,7 @@ export class VentanillaController {
   }
 
   @ApiOperation({
-    title: 'Tipo Atencion a Ventanilla',
+    summary: 'Tipo Atencion a Ventanilla',
     description: 'Servicion para actualizar tipo de atencion a Ventanilla',
   })
   @ApiResponse({ status: 200, description: 'Tipo de Atencion Editado', isArray: false })
@@ -94,7 +94,7 @@ export class VentanillaController {
   }
 
   @ApiOperation({
-    title: 'Guardar Estado de Ventanilla',
+    summary: 'Guardar Estado de Ventanilla',
     description: 'Servicion para guardar nuevo estado de Ventanilla',
   })
   @ApiResponse({ status: 200, description: 'Nuevo Estado en Ventanilla', isArray: false })
@@ -107,7 +107,7 @@ export class VentanillaController {
   }
 
   @ApiOperation({
-    title: 'Guardar Ventanilla',
+    summary: 'Guardar Ventanilla',
     description: 'Servicion para guardar una nueva ventanilla',
   })
   @ApiResponse({ status: 200, description: 'Nueva Ventanilla creada', isArray: false })

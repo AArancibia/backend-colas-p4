@@ -31,7 +31,7 @@ export class UsuarioService {
 
   async registrar(auth: UsuarioDTO): Promise<UsuarioRO> {
     const { username } = auth;
-    let usuario = await this.usuarioRepository.findOne({ username });
+    let usuario = await this.usuarioRepository.findOne({ where: { username } });
     if (usuario)
       throw new HttpException(
         `El usuario ya se encuentra en la base de datos`,
@@ -45,7 +45,7 @@ export class UsuarioService {
   }
 
   async login({ username, password }: UsuarioDTO): Promise<UsuarioRO> {
-    const usuario = await this.usuarioRepository.findOne({ username });
+    const usuario = await this.usuarioRepository.findOne({ where: { username } });
     if (!usuario)
       throw new HttpException(
         `El usuario no se encuentra en la base de datos`,

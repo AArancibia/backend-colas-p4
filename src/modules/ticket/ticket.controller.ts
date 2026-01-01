@@ -8,15 +8,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { TicketService } from './ticket.service';
-import { Ticket } from './ticket.entity';
 import { TicketDto, TicketRO } from './ticket.dto';
-import { ApiUseTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
-import { AuthGuard } from '../../shared/guards/auth.guard';
+import { ApiResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 /**
  * Controlador del Modulo Ticket
  */
-@ApiUseTags('Ticket')
+@ApiTags('Ticket')
 @Controller('ticket')
 //@UseGuards(new AuthGuard())
 export class TicketController {
@@ -28,7 +26,7 @@ export class TicketController {
    * @returns {(Ticket|Array)} Listas de Tickets
    */
   @ApiOperation({
-    title: 'Listar Tickets',
+    summary: 'Listar Tickets',
     description: 'Consulta para listar tickets de día actual',
   })
   @ApiResponse({
@@ -49,7 +47,7 @@ export class TicketController {
    * @returns {Ticket} Ticket creado.
    */
   @ApiOperation({
-    title: 'Crear Ticket',
+    summary: 'Crear Ticket',
     description: 'Consulta para crear nuevo Ticket',
   })
   @ApiResponse({ status: 201, description: 'Crear Ticket', isArray: false })
@@ -65,7 +63,7 @@ export class TicketController {
    * @returns TicketRO
    */
   @ApiOperation({
-    title: 'Asignar Ventanilla',
+    summary: 'Asignar Ventanilla',
     description: 'Asignación de Ticket a Ventanilla',
   })
   @ApiResponse({ status: 200, description: '', isArray: false })
@@ -84,7 +82,7 @@ export class TicketController {
    * @returns {Ticket} Ticket actualizado.
    */
   @ApiOperation({
-    title: 'Asignar Urgente Ticket',
+    summary: 'Asignar Urgente Ticket',
     description: 'Consulta para asignar urgencia a Ticket',
   })
   @ApiResponse({
@@ -105,7 +103,7 @@ export class TicketController {
    * @returns {Ticket} Ticket actualizado.
    */
   @ApiOperation({
-    title: 'Guardar Nuevo Estado para Ticket',
+    summary: 'Guardar Nuevo Estado para Ticket',
     description: 'Guardar nuevo estado en DetEstadoTicket',
   })
   @ApiResponse({
@@ -129,7 +127,7 @@ export class TicketController {
    * @returns {Ticket} Ticket actualizado.
    */
   @ApiOperation({
-    title: 'Derivar Ticket',
+    summary: 'Derivar Ticket',
     description: 'Derivar ticket a Otra Ventanilla',
   })
   @ApiResponse({ status: 200, description: 'Derivar Ticket', isArray: true })
@@ -149,7 +147,7 @@ export class TicketController {
    * @returns {Ticket} Ticket actualizado.
    */
   @ApiOperation({
-    title: 'Tramite a Ticket',
+    summary: 'Tramite a Ticket',
     description: 'Guardar tramite en Ticket',
   })
   @ApiResponse({

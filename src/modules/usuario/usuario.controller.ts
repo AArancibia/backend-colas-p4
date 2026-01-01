@@ -1,10 +1,10 @@
 import { Controller, Get, Param, Post, Body, HttpCode } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
-import { ApiUseTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UsuarioRO, UsuarioDTO } from './usuario.dto';
 import { VentanillaService } from '../ventanilla/ventanilla.service';
 
-@ApiUseTags('Usuario')
+@ApiTags('Usuario')
 @Controller('usuario')
 export class UsuarioController {
   constructor(
@@ -29,7 +29,7 @@ export class UsuarioController {
   }
 
   @ApiOperation({
-    title: 'Filtro Usuarios',
+    summary: 'Filtro Usuarios',
     description: 'Consulta para buscar Usuario por username',
   })
   @ApiResponse({
@@ -44,7 +44,7 @@ export class UsuarioController {
   }
 
   @ApiOperation({
-    title: 'Listar Usuarios',
+    summary: 'Listar Usuarios',
     description: 'Consulta para obtener los usuarios',
   })
   @ApiResponse({

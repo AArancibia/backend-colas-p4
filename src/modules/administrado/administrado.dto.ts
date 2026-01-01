@@ -1,35 +1,35 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class AdministradoDto {
-  @ApiModelProperty()
+  @ApiProperty()
   nombre: string;
-  @ApiModelProperty()
+  @ApiProperty()
   apepat: string;
-  @ApiModelProperty()
+  @ApiProperty()
   apemat: string;
-  @ApiModelProperty()
+  @ApiProperty()
   nrodoc: string;
-  @ApiModelProperty({
+  @ApiProperty({
     type: 'number',
   })
   idcontribuyente?: number;
 }
 
 export class AdministradoRO {
-  @ApiModelProperty()
+  @ApiProperty()
   id: number;
-  @ApiModelProperty()
+  @ApiProperty()
   nrodoc: string;
-  @ApiModelProperty()
+  @ApiProperty()
   nombre: string;
-  @ApiModelProperty()
+  @ApiProperty()
   apepat: string;
-  @ApiModelProperty()
+  @ApiProperty()
   apemat: string;
-  @ApiModelProperty()
+  @ApiProperty()
   idcontribuyente: number;
-  @ApiModelProperty()
+  @ApiProperty()
   tipodoc?: string;
-  @ApiModelProperty()
+  @ApiProperty()
   foto?: string;
 }

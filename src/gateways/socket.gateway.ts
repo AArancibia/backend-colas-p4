@@ -5,7 +5,12 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 
-@WebSocketGateway(0, {})
+@WebSocketGateway(0, {
+  cors: {
+    origin: process.env.CLIENT_URL || 'http://localhost:4200',
+    credentials: true,
+  },
+})
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   logger = new Logger('WebSocketsGateway');
   constructor() {}

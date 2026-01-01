@@ -2,9 +2,9 @@ import { Controller, Logger, Param, Post } from '@nestjs/common';
 import { AdministradoService } from './administrado.service';
 import { ContribuyenteService } from '../rentas/contribuyente/contribuyente.service';
 import { AdministradoRO } from './administrado.dto';
-import { ApiUseTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-@ApiUseTags('Administrado')
+@ApiTags('Administrado')
 @Controller('administrado')
 export class AdministradoController {
   private logger = new Logger( 'AdministradoController' );
@@ -14,7 +14,7 @@ export class AdministradoController {
   ) {}
 
   @ApiOperation({
-    title: 'Obtener Administrado y Guardar',
+    summary: 'Obtener Administrado y Guardar',
     description: 'Servicio para buscar en Reniec, buscar Contribuyente en la BD-Rentas y Guardar en DB-COLAS',
   })
   @ApiResponse({ status: 200, description: 'Datos del Administrado', isArray: true })

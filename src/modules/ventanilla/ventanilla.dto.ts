@@ -1,12 +1,12 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class VentanillaDTO {
-  @ApiModelProperty()
+  @ApiProperty()
   codigoventanilla: string;
-  @ApiModelProperty()
+  @ApiProperty()
   ubicacion: string;
-  @ApiModelProperty()
+  @ApiProperty()
   idusuario: number;
-  @ApiModelProperty()
+  @ApiProperty()
   tipoatencion: string;
 }

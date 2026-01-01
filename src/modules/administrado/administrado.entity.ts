@@ -27,7 +27,7 @@ export class Administrado {
   @OneToMany( type => Ticket, ticket => ticket.id )
   ticket: Ticket;
 
-  @ManyToMany( type => Tipodoc )
+  @ManyToMany( () => Tipodoc, docs => docs.administrado)
   @JoinTable()
   docs: Tipodoc[];
 

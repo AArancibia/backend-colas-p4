@@ -10,7 +10,7 @@ export class Tipodoc {
   @Column()
   descripcion: string;
 
-  @ManyToMany( type => Administrado )
+  @ManyToMany( () => Administrado, administrado => administrado.docs )
   administrado: Administrado[];
 
 }

@@ -10,10 +10,11 @@ import { SistradocModule } from './modules/sistradoc/sistradoc.module';
 import { ContribuyenteModule } from './modules/rentas/contribuyente/contribuyente.module';
 import { SocketGateway } from './gateways/socket.gateway';
 import { TematicaModule } from './modules/tematica/tematica.module';
+import { dbOptions } from './database/db-config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot({ ...dbOptions }),
     TicketModule,
     VentanillaModule,
     UsuarioModule,

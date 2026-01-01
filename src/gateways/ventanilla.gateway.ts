@@ -5,13 +5,17 @@ import {
 } from '@nestjs/websockets';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Detestadoventanilla } from '../modules/ventanilla/detestadoventanilla/detestadoventanilla.entity';
-import { getConnection, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Ventanilla } from '../modules/ventanilla/ventanilla.entity';
 import { Logger } from '@nestjs/common';
 import { Usuario } from '../modules/usuario/usuario.entity';
 
 @WebSocketGateway(0, {
   namespace: 'ventanilla',
+  cors: {
+    origin: process.env.CLIENT_URL || 'http://localhost:4200',
+    credentials: true,
+  },
 })
 export class VentanillaGateway {
   private logger = new Logger('VentanillaGateway');
@@ -24,6 +28,7 @@ export class VentanillaGateway {
     @InjectRepository(Ventanilla)
     private ventanillaRepository: Repository<Ventanilla>,
     @InjectRepository(Usuario) private usuarioRepository: Repository<Usuario>,
+    private readonly dataSource: DataSource,
   ) {}
 
   toResponseObject(usuario: Usuario) {
@@ -68,7 +73,7 @@ export class VentanillaGateway {
 
   @SubscribeMessage('[VENTANILLA] ULTIMOESTADO')
   async ultimoEstadoVentanilla() {
-    const ventanillas = await getConnection().manager.query(
+    const ventanillas = await this.dataSource.manager.query(
       `select * from ULTIMOESTADOVENTANILLA`,
     );
     const ultimoEstado = [];

@@ -1,22 +1,22 @@
 import {
-  OnGatewayConnection,
-  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
-import { Logger, Injectable } from '@nestjs/common';
-import { getConnection, In, Not, Repository } from 'typeorm';
+import { Logger } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { formatFechaCorta, formatFechaLarga } from '../shared/utils';
+import { formatFechaCorta } from '../shared/utils';
 import { Ticket } from '../modules/ticket/ticket.entity';
 import { Detestadoticket } from '../modules/ticket/detestadoticket/detestadoticket.entity';
-import * as momenttz from 'moment-timezone';
 import * as moment from 'moment';
 
 @WebSocketGateway(0, {
   namespace: 'ticket',
+  cors: {
+    origin: process.env.CLIENT_URL || 'http://localhost:4200',
+    credentials: true,
+  },
 })
 export class TicketGateway {
   logger = new Logger('WebSocketsTicket');
@@ -26,6 +26,7 @@ export class TicketGateway {
     @InjectRepository(Ticket) private ticketRepository: Repository<Ticket>,
     @InjectRepository(Detestadoticket)
     private detestadoRepository: Repository<Detestadoticket>,
+    private readonly dataSource: DataSource,
   ) {}
 
   @SubscribeMessage('[TICKET] Lista')
@@ -53,7 +54,7 @@ export class TicketGateway {
 
   @SubscribeMessage('[TICKET] LLAMARTICKET')
   async llamadaTickets() {
-    const tickets = await getConnection().manager.query(
+    const tickets = await this.dataSource.manager.query(
       `select * from ULTIMOESTADOTICKET`,
     );
     const ultimoEstado = [];

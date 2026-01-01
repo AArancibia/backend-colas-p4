@@ -1,4 +1,4 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 
@@ -12,15 +12,15 @@ export class UsuarioDTO {
 }
 
 export class UsuarioRO {
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'Llave primaria del registro de usuario',
   })
   idusuario: number;
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'Nombre de usuario',
   })
   username: string;
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'Llave foranea de la tabla Personal de la BD-Sistradoc-prod',
   })
   idpersonal?: number;

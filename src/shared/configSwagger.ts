@@ -18,7 +18,7 @@ export const swaggerBaseConfig = new DocumentBuilder()
     'Aquí se encuentran todos los servicios del proyecto de Colas de la MuniVES',
   )
   .setVersion('1.0.0')
-  .setHost(String(`http://localhost:${PORT}`).split('//')[1])
+  .addServer(String(`http://localhost:${PORT}`).split('//')[1])
   .setBasePath('/api')
   //.addTag( 'Colas', 'Proyecto' )
   //.addTag( 'NestJS', 'Framework')
