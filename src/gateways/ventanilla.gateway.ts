@@ -13,7 +13,7 @@ import { Usuario } from '../modules/usuario/usuario.entity';
 @WebSocketGateway(0, {
   namespace: 'ventanilla',
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:4200',
+    origin: process.env.CLIENT_URL.split(','),
     credentials: true,
   },
 })

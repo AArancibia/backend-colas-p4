@@ -1,7 +1,7 @@
-import { Controller, Get, Param, Post, Body, HttpCode } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { UsuarioRO, UsuarioDTO } from './usuario.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UsuarioDTO, UsuarioRO } from './usuario.dto';
 import { VentanillaService } from '../ventanilla/ventanilla.service';
 
 @ApiTags('Usuario')
@@ -25,6 +25,16 @@ export class UsuarioController {
       usuario.idusuario,
     );
     usuario.ventanilla = ventanilla;
+    return usuario;
+  }
+
+  @HttpCode(200)
+  @Post('information/:username')
+  async getUserInformation(@Param('username') username: string) {
+    const usuario: any = await this.usuarioService.getUser({ username });
+    usuario.ventanilla = await this.ventanillaService.obtenerVentanillaporIdUsuario(
+      usuario.idusuario,
+    );
     return usuario;
   }
 

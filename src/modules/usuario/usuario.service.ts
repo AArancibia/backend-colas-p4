@@ -1,6 +1,5 @@
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-
 import { Like, Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
@@ -58,5 +57,18 @@ export class UsuarioService {
       );
     }
     return usuario.toResponseObject(true);
+  }
+
+  async getUser({ username }): Promise<UsuarioRO> {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { username },
+    });
+    if (!usuario) {
+      throw new HttpException(
+        `El usuario no se encuentra en la base de datos`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return usuario.toResponseObject(false);
   }
 }

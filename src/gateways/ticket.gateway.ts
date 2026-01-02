@@ -14,7 +14,7 @@ import * as moment from 'moment';
 @WebSocketGateway(0, {
   namespace: 'ticket',
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:4200',
+    origin: process.env.CLIENT_URL.split(','),
     credentials: true,
   },
 })
